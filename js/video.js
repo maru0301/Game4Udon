@@ -18,6 +18,13 @@ var videos = [
 "Lv85e8JgR3g",
 "DYW-kEiCnJI",
 "-P9zLHDUFEM",
+"3vylNCUu4eA",
+"dsveCVCt5J4",
+"IAIan0h85Xg",
+"O7MwJ5WGA_A",
+"HTj4BzF6HV4",
+"2Ncmjy-HaeA",
+/*
 "2gU_HpD0hWY",
 "2gU_HpD0hWY",
 "2gU_HpD0hWY",
@@ -39,12 +46,7 @@ var videos = [
 "2gU_HpD0hWY",
 "2gU_HpD0hWY",
 "2gU_HpD0hWY",
-"2gU_HpD0hWY",
-"2gU_HpD0hWY",
-"2gU_HpD0hWY",
-"2gU_HpD0hWY",
-"2gU_HpD0hWY",
-"2gU_HpD0hWY",
+*/
 ];
 
 var rndVideo = videos[Math.floor(Math.random() * videos.length)];
