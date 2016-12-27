@@ -14,6 +14,8 @@ var CDN_URL = "";
 ////////////////////////////////////////////////////////////////////////////////////
 // Error Message
 var ERROR_ID_SNUM_NAME_ERROR = "サモナーネームが不正です"
+var ERROR_ID_MASTERY_LISTDATA_GET_ERROR = "マスタリーリストが取得出来ませんでした"
+var ERROR_ID_VERSION_GET_ERROR = "バージョン情報が取得出来ませんでした"
 
 ////////////////////////////////////////////////////////////////////////////////////
 //
@@ -54,6 +56,7 @@ function summonerLookUp()
 		}
 		else
 		{
+			errorDlg(ERROR_ID_SNUM_NAME_ERROR)
 		}
 	});
 }
@@ -106,7 +109,7 @@ function ShowMastery()
 		},
 		error: function (XMLHttpRequest, textStatus, errorThrown)
 		{
-			console.log("ERROR");
+			console.log(ERROR_ID_MASTERY_LISTDATA_ERROR);
 		}
 	});
 }
@@ -140,6 +143,7 @@ function GetVersion()
 		},
 		error: function (XMLHttpRequest, textStatus, errorThrown)
 		{
+			console.log(ERROR_ID_VERSION_GET_ERROR);
 		}
 	});
 }

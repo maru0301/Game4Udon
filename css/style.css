@@ -7,6 +7,14 @@ body {
     line-height:1.5em;
     width:960px;
 }
+
+video {
+  position: fixed;
+  right: 0;
+  top: 0;
+  z-index: 1;
+}
+
 h1, h2, h3, h4, h5, h6 {
     font-family:"Hiragino Kaku Gothic Pro",  Meiryo, sans-serif;
     font-weight:lighter;
