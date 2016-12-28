@@ -38,12 +38,14 @@ function summonerLookUp()
 
 				success: function (json)
 				{
-				var SUMMONER_NAME_NOSPACES = SUMMONER_NAME.replace(" ", "");
-				SUMMONER_NAME_NOSPACES = SUMMONER_NAME_NOSPACES.toLowerCase().trim();
+					var SUMMONER_NAME_NOSPACES = SUMMONER_NAME.replace(" ", "");
+					SUMMONER_NAME_NOSPACES = SUMMONER_NAME_NOSPACES.toLowerCase().trim();
 
-				SUM_ID = json[SUMMONER_NAME_NOSPACES].id; // サモナーID保存
+					SUM_ID = json[SUMMONER_NAME_NOSPACES].id; // サモナーID保存
 
-				ShowSummonerInfo(json, SUMMONER_NAME_NOSPACES); // サモナー情報表示
+					ShowSummonerInfo(json, SUMMONER_NAME_NOSPACES); // サモナー情報表示
+
+					GetMatchHistory();
 				},
 
 				error: function (XMLHttpRequest, textStatus, errorThrown)
@@ -125,7 +127,7 @@ function GetVersion()
 
 		success: function (json)
 		{
-			console.log(json);
+//			console.log(json);
 
 			VER_CHAMPION = json.n.champion;
 			VER_ITEM = json.n.item;
@@ -133,17 +135,48 @@ function GetVersion()
 			VER_RUNE = json.n.rune;
 
 			CDN_URL = json.cdn;
-
+/*
 			console.log("VER_CHAMPION : " + VER_CHAMPION);
 			console.log("VER_ITEM : " + VER_ITEM);
 			console.log("VER_MASTERY : " + VER_MASTERY);
 			console.log("VER_CHAMPION : " + VER_CHAMPION);
 			console.log("VER_RUNE : " + VER_RUNE);
 			console.log("CDN_URL : " + CDN_URL);
+*/
 		},
 		error: function (XMLHttpRequest, textStatus, errorThrown)
 		{
 			console.log(ERROR_ID_VERSION_GET_ERROR);
+		}
+	});
+}
+
+function GetMatchHistory()
+{
+	var mode = [
+		"RANKED_SOLO_5x5",
+		"RANKED_FLEX_SR",
+	];
+
+	var season = [
+		"SEASON2016",
+		"SEASON2017",
+	];
+	console.log("SUM_ID : " + SUM_ID);
+	$.ajax(
+	{
+		url: 'https://jp.api.pvp.net/api/lol/jp/v2.2/matchlist/by-summoner/'+ SUM_ID + "?rankedQueues="+ mode[1] + "&seasons=" + season[1] + "&api_key=" + API_KEY,
+		type: 'GET',
+		dataType: 'json',
+		data: {},
+
+		success: function (json)
+		{
+			console.log(json);
+		},
+		error: function (XMLHttpRequest, textStatus, errorThrown)
+		{
+			console.log("GetMatchHistory");
 		}
 	});
 }
