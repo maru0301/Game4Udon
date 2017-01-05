@@ -16,6 +16,7 @@ var CDN_URL = "";
 var ERROR_ID_SNUM_NAME_ERROR = "サモナーネームが不正です"
 var ERROR_ID_MASTERY_LISTDATA_GET_ERROR = "マスタリーリストが取得出来ませんでした"
 var ERROR_ID_VERSION_GET_ERROR = "バージョン情報が取得出来ませんでした"
+var ERROR_ID_SNUM_GET_ERROR = "サモナーネーム情報が取得出来ませんでした"
 
 ////////////////////////////////////////////////////////////////////////////////////
 //
@@ -27,34 +28,90 @@ function summonerLookUp()
 
 		if(SUMMONER_NAME !== "")
 		{
-			GetVersion();
+			var request = [
+				{ error_id: ERROR_ID_VERSION_GET_ERROR,		url: 'https://global.api.pvp.net/api/lol/static-data/jp/v1.2/realm?api_key=' + API_KEY  }, // Version
+				{ error_id: ERROR_ID_SNUM_GET_ERROR,		url: 'https://'  + COUNTRY_ID2.toLowerCase() + '.api.pvp.net/api/lol/' + COUNTRY_ID2.toLowerCase() + '/v1.4/summoner/by-name/' + SUMMONER_NAME + '?api_key=' + API_KEY  }, // サモナーID
+			];
 
-			$.ajax(
+			var jqXHRList = [];
+
+			for (var i = 0, max = request.length ; i < max ; ++i)
 			{
-				url: 'https://' + COUNTRY_ID2.toLowerCase() + '.api.pvp.net/api/lol/' + COUNTRY_ID2.toLowerCase() + '/v1.4/summoner/by-name/' + SUMMONER_NAME + '?api_key=' + API_KEY,
-				type: 'GET',
-				dataType: 'json',
-				data: {},
-
-				success: function (json)
+				jqXHRList.push($.ajax(
 				{
-					var SUMMONER_NAME_NOSPACES = SUMMONER_NAME.replace(" ", "");
-					SUMMONER_NAME_NOSPACES = SUMMONER_NAME_NOSPACES.toLowerCase().trim();
+					url: request[i].url,
+					type: 'GET',
+					dataType: 'json',
+					data: {}
+				}));
+			}
 
-					SUM_ID = json[SUMMONER_NAME_NOSPACES].id; // サモナーID保存
+			$.when.apply(null, jqXHRList).done(function ()
+			{
+				var json = [];
+				var statuses = [];
+				var jqXHRResultList = [];
 
-					ShowSummonerInfo(json, SUMMONER_NAME_NOSPACES); // サモナー情報表示
-
-					GetMatchHistory();
-				},
-
-				error: function (XMLHttpRequest, textStatus, errorThrown)
+				for (var i = 0, max = arguments.length ; i < max ; ++i)
 				{
-				errorDlg(ERROR_ID_SNUM_NAME_ERROR);
+					var result = arguments[i];
+					json.push(result[0]);
+					statuses.push(result[1]);
+					jqXHRResultList.push(result[3]);
 				}
-		      });
-		      
-		      ShowMastery();　// マスタリー表示
+//				console.log(json);
+//				console.log(statuses);
+
+				///////////////////////////////////////////////////////////
+				// Global情報取得
+				///////////////////////////////////////////////////////////
+				var verJson = json[0];
+				var summonerJson = json[1];
+
+				// Version
+				VER_CHAMPION = verJson.n.champion;
+				VER_ITEM = verJson.n.item;
+				VER_MASTERY = verJson.n.mastery;
+				VER_RUNE = verJson.n.rune;
+
+				CDN_URL = verJson.cdn;
+
+//				console.log("VER_CHAMPION : " + VER_CHAMPION);
+//				console.log("VER_ITEM : " + VER_ITEM);
+//				console.log("VER_MASTERY : " + VER_MASTERY);
+//				console.log("VER_CHAMPION : " + VER_CHAMPION);
+//				console.log("VER_RUNE : " + VER_RUNE);
+//				console.log("CDN_URL : " + CDN_URL);
+
+				// サモナーID
+				var SUMMONER_NAME_NOSPACES = SUMMONER_NAME.replace(" ", "");
+				SUMMONER_NAME_NOSPACES = SUMMONER_NAME_NOSPACES.toLowerCase().trim();
+
+				SUM_ID = summonerJson[SUMMONER_NAME_NOSPACES].id; // サモナーID保存
+
+				///////////////////////////////////////////////////////////
+				// 表示
+				///////////////////////////////////////////////////////////
+
+				ShowSummonerInfo(summonerJson, SUMMONER_NAME_NOSPACES); // サモナー情報表示
+
+//				GetMatchHistory();
+				GetRecentMatchHistory(); // 試合情報表示
+
+//				ShowMastery();　// マスタリー表示
+			});
+
+			$.when.apply(null, jqXHRList).fail(function ()
+			{
+				console.log(jqXHRList);
+				for (var i = 0 ; i < jqXHRList.length ; ++i)
+				{
+					if( jqXHRList[i].statusText === "error" )
+					{
+						errorDlg( request[i].error_id );
+					}
+				}
+			});
 		}
 		else
 		{
@@ -94,13 +151,15 @@ function ShowMastery()
 
 		success: function (json)
 		{
+			console.log("ShowMastery: success");
+
 			var target = document.getElementById("mastery");
 			var newTag;
 
 			for(var i in json.data)
 			{
 				//console.log(i + ':' + json.data[i].name);
-				newTag = document.createElement("p"+i);
+				newTag = document.createElement("mastery_"+i);
 				newTag.innerHTML = "<br />" + json.data[i].name +
 						   "<br />" + "<img src='" + CDN_URL + "/" + VER_MASTERY + "/img/mastery/" + i + ".png' width='48' height='48' title='" + json.data[i].name +"'>" +
 						   "<br />" + json.data[i].description +
@@ -116,41 +175,6 @@ function ShowMastery()
 	});
 }
 
-function GetVersion()
-{
-	$.ajax(
-	{
-		url: 'https://global.api.pvp.net/api/lol/static-data/jp/v1.2/realm?api_key=' + API_KEY,
-		type: 'GET',
-		dataType: 'json',
-		data: {},
-
-		success: function (json)
-		{
-//			console.log(json);
-
-			VER_CHAMPION = json.n.champion;
-			VER_ITEM = json.n.item;
-			VER_MASTERY = json.n.mastery;
-			VER_RUNE = json.n.rune;
-
-			CDN_URL = json.cdn;
-/*
-			console.log("VER_CHAMPION : " + VER_CHAMPION);
-			console.log("VER_ITEM : " + VER_ITEM);
-			console.log("VER_MASTERY : " + VER_MASTERY);
-			console.log("VER_CHAMPION : " + VER_CHAMPION);
-			console.log("VER_RUNE : " + VER_RUNE);
-			console.log("CDN_URL : " + CDN_URL);
-*/
-		},
-		error: function (XMLHttpRequest, textStatus, errorThrown)
-		{
-			console.log(ERROR_ID_VERSION_GET_ERROR);
-		}
-	});
-}
-
 function GetMatchHistory()
 {
 	var mode = [
@@ -162,7 +186,7 @@ function GetMatchHistory()
 		"SEASON2016",
 		"SEASON2017",
 	];
-	console.log("SUM_ID : " + SUM_ID);
+
 	$.ajax(
 	{
 		url: 'https://jp.api.pvp.net/api/lol/jp/v2.2/matchlist/by-summoner/'+ SUM_ID + "?rankedQueues="+ mode[1] + "&seasons=" + season[1] + "&api_key=" + API_KEY,
@@ -172,11 +196,59 @@ function GetMatchHistory()
 
 		success: function (json)
 		{
+	console.log("GetMatchHistory: success");
 			console.log(json);
 		},
 		error: function (XMLHttpRequest, textStatus, errorThrown)
 		{
 			console.log("GetMatchHistory");
+		}
+	});
+}
+
+function GetRecentMatchHistory()
+{
+	$.ajax(
+	{
+		url: 'https://jp.api.pvp.net/api/lol/jp/v1.3/game/by-summoner/' + SUM_ID + "/recent?api_key=" + API_KEY,
+		type: 'GET',
+		dataType: 'json',
+		data: {},
+
+		success: function (json)
+		{
+			console.log("GetRecentMatchHistory: success");
+			console.log(json.games[0].gameMode);
+
+			var target = document.getElementById("match");
+			var newTag;
+			var gameMode = "";
+			var str_data = {
+				"gameMode" = { "ARAM"
+				}
+			};
+
+			for(var i in json.games)
+			{
+				if( json.games[i].gameMode === "ARAM" )
+					gameMode = "アラーム";
+
+				//console.log(i + ':' + json.data[i].name);
+				newTag = document.createElement("match_"+i);
+/*
+				newTag.innerHTML = "<br />" + json.data[i].name +
+						   "<br />" + "<img src='" + CDN_URL + "/" + VER_MASTERY + "/img/mastery/" + i + ".png' width='48' height='48' title='" + json.data[i].name +"'>" +
+						   "<br />" + json.data[i].description +
+						   "<br />";
+*/
+				newTag.innerHTML = "<br />" + gameMode;
+
+				target.appendChild(newTag);
+			}
+		},
+		error: function (XMLHttpRequest, textStatus, errorThrown)
+		{
+			console.log("GetRecentMatchHistory");
 		}
 	});
 }
