@@ -11,12 +11,17 @@ var VER_CHAMPION = "";
 
 var CDN_URL = "";
 
+///////////////////////////////////////
+var JSON_DATA_CHAMP_IMG = {};
+
+
 ////////////////////////////////////////////////////////////////////////////////////
 // Error Message
-var ERROR_ID_SNUM_NAME_ERROR = "サモナーネームが不正です"
+var ERROR_ID_SNUM_NAME_ERROR 		= "サモナーネームが不正です"
 var ERROR_ID_MASTERY_LISTDATA_GET_ERROR = "マスタリーリストが取得出来ませんでした"
-var ERROR_ID_VERSION_GET_ERROR = "バージョン情報が取得出来ませんでした"
-var ERROR_ID_SNUM_GET_ERROR = "サモナーネーム情報が取得出来ませんでした"
+var ERROR_ID_VERSION_GET_ERROR 		= "バージョン情報が取得出来ませんでした"
+var ERROR_ID_SNUM_GET_ERROR 		= "サモナーネーム情報が取得出来ませんでした"
+var ERROR_ID_CHAMPION_GET_ERROR 	= "チャンピオン情報が取得出来ませんでした"
 
 ////////////////////////////////////////////////////////////////////////////////////
 //
@@ -31,6 +36,7 @@ function summonerLookUp()
 			var request = [
 				{ error_id: ERROR_ID_VERSION_GET_ERROR,		url: 'https://global.api.pvp.net/api/lol/static-data/jp/v1.2/realm?api_key=' + API_KEY  }, // Version
 				{ error_id: ERROR_ID_SNUM_GET_ERROR,		url: 'https://'  + COUNTRY_ID2.toLowerCase() + '.api.pvp.net/api/lol/' + COUNTRY_ID2.toLowerCase() + '/v1.4/summoner/by-name/' + SUMMONER_NAME + '?api_key=' + API_KEY  }, // サモナーID
+				{ error_id: ERROR_ID_CHAMPION_GET_ERROR,	url: 'https://global.api.pvp.net/api/lol/static-data/jp/v1.2/champion?champData=image&api_key=' + API_KEY  }, // Img
 			];
 
 			var jqXHRList = [];
@@ -59,14 +65,16 @@ function summonerLookUp()
 					statuses.push(result[1]);
 					jqXHRResultList.push(result[3]);
 				}
-//				console.log(json);
+				console.log(json);
 //				console.log(statuses);
+//				console.log(result);
 
 				///////////////////////////////////////////////////////////
 				// Global情報取得
 				///////////////////////////////////////////////////////////
 				var verJson = json[0];
 				var summonerJson = json[1];
+				var champImgJson = json[2];
 
 				// Version
 				VER_CHAMPION = verJson.n.champion;
@@ -88,6 +96,9 @@ function summonerLookUp()
 				SUMMONER_NAME_NOSPACES = SUMMONER_NAME_NOSPACES.toLowerCase().trim();
 
 				SUM_ID = summonerJson[SUMMONER_NAME_NOSPACES].id; // サモナーID保存
+
+				// Jsonをキャッシュ
+				JSON_DATA_CHAMP_IMG = champImgJson;
 
 				///////////////////////////////////////////////////////////
 				// 表示
@@ -218,22 +229,32 @@ function GetRecentMatchHistory()
 		success: function (json)
 		{
 			console.log("GetRecentMatchHistory: success");
-			console.log(json.games[0].gameMode);
+			console.log(json.games);
 
 			var target = document.getElementById("match");
 			var newTag;
+
 			var gameMode = "";
-			var str_data = {
-				"gameMode" = { "ARAM"
-				}
-			};
+			var champ_img = "";
+			var champ_name = "";
+
+			$("#match").children().remove();
 
 			for(var i in json.games)
 			{
 				if( json.games[i].gameMode === "ARAM" )
 					gameMode = "アラーム";
 
-				//console.log(i + ':' + json.data[i].name);
+				for(var j in JSON_DATA_CHAMP_IMG.data)
+				{
+					if( json.games[i].championId == JSON_DATA_CHAMP_IMG.data[j].id )
+					{
+						champ_img = JSON_DATA_CHAMP_IMG.data[j].image.full;
+						champ_name = JSON_DATA_CHAMP_IMG.data[j].name;
+						break;
+					}
+				}
+
 				newTag = document.createElement("match_"+i);
 /*
 				newTag.innerHTML = "<br />" + json.data[i].name +
@@ -241,7 +262,10 @@ function GetRecentMatchHistory()
 						   "<br />" + json.data[i].description +
 						   "<br />";
 */
-				newTag.innerHTML = "<br />" + gameMode;
+				newTag.innerHTML = "<br />" + gameMode +
+						   "<br />" + "<img src='" + CDN_URL + "/" + VER_CHAMPION + "/img/champion/" + champ_img + "' width='48' height='48' title='" + champ_name +"'>" +
+						   "<img src='" + CDN_URL + "/" + VER_CHAMPION + "/img/champion/" + champ_img + "' width='24' height='24' title='" + champ_name +"'>" +
+						   "<img src='" + CDN_URL + "/" + VER_CHAMPION + "/img/champion/" + champ_img + "' width='24' height='24' title='" + champ_name +"'>";
 
 				target.appendChild(newTag);
 			}
