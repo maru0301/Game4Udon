@@ -1,3 +1,8 @@
+@font-face {
+	font-family: 'MyFont';
+	src: url(../font/Pigmo-00.otf);
+}
+
 body {
 	background:#aaa;
 	font-family: Georgia, 'Hiragino Mincho Pro', Meiryo, serif;
@@ -58,7 +63,7 @@ header {
 }
 
 header h1, header h2, header h3, header h4, header h5, header h6, header li, header p {
-	font-family: Georgia, 'Hiragino Mincho Pro', Meiryo, serif;
+	font-family: MyFont;
 }
 
 header h1 {
