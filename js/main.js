@@ -8,11 +8,13 @@ var VER_ITEM = "";
 var VER_RUNE = "";
 var VER_MASTERY = "";
 var VER_CHAMPION = "";
+var VER_SN_SPELLS = "";
 
 var CDN_URL = "";
 
 ///////////////////////////////////////
-var JSON_DATA_CHAMP_IMG = {};
+var JSON_DATA_CHAMP_IMG 	= {};
+var JSON_DATA_SN_SPELLS_IMG 	= {};
 
 
 ////////////////////////////////////////////////////////////////////////////////////
@@ -22,6 +24,7 @@ var ERROR_ID_MASTERY_LISTDATA_GET_ERROR = "マスタリーリストが取得出�
 var ERROR_ID_VERSION_GET_ERROR 		= "バージョン情報が取得出来ませんでした"
 var ERROR_ID_SNUM_GET_ERROR 		= "サモナーネーム情報が取得出来ませんでした"
 var ERROR_ID_CHAMPION_GET_ERROR 	= "チャンピオン情報が取得出来ませんでした"
+var ERROR_ID_SN_SPELLS_GET_ERROR 	= "サモナースペル情報が取得出来ませんでした"
 
 ////////////////////////////////////////////////////////////////////////////////////
 //
@@ -35,8 +38,9 @@ function summonerLookUp()
 		{
 			var request = [
 				{ error_id: ERROR_ID_VERSION_GET_ERROR,		url: 'https://global.api.pvp.net/api/lol/static-data/jp/v1.2/realm?api_key=' + API_KEY  }, // Version
-				{ error_id: ERROR_ID_SNUM_GET_ERROR,		url: 'https://'  + COUNTRY_ID2.toLowerCase() + '.api.pvp.net/api/lol/' + COUNTRY_ID2.toLowerCase() + '/v1.4/summoner/by-name/' + SUMMONER_NAME + '?api_key=' + API_KEY  }, // サモナーID
-				{ error_id: ERROR_ID_CHAMPION_GET_ERROR,	url: 'https://global.api.pvp.net/api/lol/static-data/jp/v1.2/champion?champData=image&api_key=' + API_KEY  }, // Img
+				{ error_id: ERROR_ID_SNUM_GET_ERROR,		url: 'https://' + COUNTRY_ID2.toLowerCase() + '.api.pvp.net/api/lol/' + COUNTRY_ID2.toLowerCase() + '/v1.4/summoner/by-name/' + SUMMONER_NAME + '?api_key=' + API_KEY  }, // サモナーID
+				{ error_id: ERROR_ID_CHAMPION_GET_ERROR,	url: 'https://global.api.pvp.net/api/lol/static-data/jp/v1.2/champion?champData=image&api_key=' + API_KEY  }, // champion Img
+				{ error_id: ERROR_ID_SN_SPELLS_GET_ERROR,	url: 'https://global.api.pvp.net/api/lol/static-data/jp/v1.2/summoner-spell?spellData=image&api_key=' + API_KEY  }, // summoner spell Img
 			];
 
 			var jqXHRList = [];
@@ -75,12 +79,14 @@ function summonerLookUp()
 				var verJson = json[0];
 				var summonerJson = json[1];
 				var champImgJson = json[2];
+				var spellsImgJson = json[3];
 
 				// Version
 				VER_CHAMPION = verJson.n.champion;
 				VER_ITEM = verJson.n.item;
 				VER_MASTERY = verJson.n.mastery;
 				VER_RUNE = verJson.n.rune;
+				VER_SN_SPELLS = verJson.n.summoner;
 
 				CDN_URL = verJson.cdn;
 
@@ -99,6 +105,7 @@ function summonerLookUp()
 
 				// Jsonをキャッシュ
 				JSON_DATA_CHAMP_IMG = champImgJson;
+				JSON_DATA_SN_SPELLS_IMG = spellsImgJson;
 
 				///////////////////////////////////////////////////////////
 				// 表示
@@ -237,6 +244,12 @@ function GetRecentMatchHistory()
 			var gameMode = "";
 			var champ_img = "";
 			var champ_name = "";
+			var spell1_img = "";
+			var spell2_img = "";
+			var spell1_name = "";
+			var spell2_name = "";
+			var isSpell1 = false;
+			var isSpell2 = false;
 
 			$("#match").children().remove();
 
@@ -255,6 +268,29 @@ function GetRecentMatchHistory()
 					}
 				}
 
+				isSpell1 = false;
+				isSpell2 = false;
+
+				for(var j in JSON_DATA_SN_SPELLS_IMG.data)
+				{
+					if( json.games[i].spell1 == JSON_DATA_SN_SPELLS_IMG.data[j].id )
+					{
+						spell1_img = JSON_DATA_SN_SPELLS_IMG.data[j].image.full;
+						spell1_name = JSON_DATA_SN_SPELLS_IMG.data[j].name;
+						isSpell1 = true;
+					}
+
+					if( json.games[i].spell2 == JSON_DATA_SN_SPELLS_IMG.data[j].id )
+					{
+						spell2_img = JSON_DATA_SN_SPELLS_IMG.data[j].image.full;
+						spell2_name = JSON_DATA_SN_SPELLS_IMG.data[j].name;
+						isSpell2 = true;
+					}
+
+					if( isSpell1 == true && isSpell2 == true )
+						break;
+				}
+
 				newTag = document.createElement("match_"+i);
 /*
 				newTag.innerHTML = "<br />" + json.data[i].name +
@@ -264,8 +300,8 @@ function GetRecentMatchHistory()
 */
 				newTag.innerHTML = "<br />" + gameMode +
 						   "<br />" + "<img src='" + CDN_URL + "/" + VER_CHAMPION + "/img/champion/" + champ_img + "' width='48' height='48' title='" + champ_name +"'>" +
-						   "<img src='" + CDN_URL + "/" + VER_CHAMPION + "/img/champion/" + champ_img + "' width='24' height='24' title='" + champ_name +"'>" +
-						   "<img src='" + CDN_URL + "/" + VER_CHAMPION + "/img/champion/" + champ_img + "' width='24' height='24' title='" + champ_name +"'>";
+						   "<img src='" + CDN_URL + "/" + VER_SN_SPELLS + "/img/spell/" + spell1_img + "' width='24' height='24' title='" + spell1_name +"'>" +
+						   "<img src='" + CDN_URL + "/" + VER_SN_SPELLS + "/img/spell/" + spell2_img + "' width='24' height='24' title='" + spell2_name +"'>";
 
 				target.appendChild(newTag);
 			}
