@@ -16,15 +16,28 @@ var CDN_URL = "";
 var JSON_DATA_CHAMP_IMG 	= {};
 var JSON_DATA_SN_SPELLS_IMG 	= {};
 
+///////////////////////////////////////
+var GAME_MODE_MESS = {
+	"ARAM" :	[
+				{ "type" : "MATCHED_GAME",	"sub_type" : "ARAM_UNRANKED_5x5",	"mess" : "アラーム" },
+				{ "type" : "CUSTOM_GAME", 	"sub_type" : "ARAM_UNRANKED_5x5",	"mess" : "カスタム(アラーム)" },
+			],
+	"CLASSIC" :	[
+				{ "type" : "MATCHED_GAME", 	"sub_type" : "RANKED_SOLO_5x5", 	"mess" : "ランクゲーム" },
+				{ "type" : "MATCHED_GAME", 	"sub_type" : "NORMAL", 			"mess" : "ノーマルゲーム" },
+			],
+};
+
+console.log(GAME_MODE_MESS["ARAM"][0].type);
 
 ////////////////////////////////////////////////////////////////////////////////////
 // Error Message
-var ERROR_ID_SNUM_NAME_ERROR 		= "サモナーネームが不正です"
-var ERROR_ID_MASTERY_LISTDATA_GET_ERROR = "マスタリーリストが取得出来ませんでした"
-var ERROR_ID_VERSION_GET_ERROR 		= "バージョン情報が取得出来ませんでした"
-var ERROR_ID_SNUM_GET_ERROR 		= "サモナーネーム情報が取得出来ませんでした"
-var ERROR_ID_CHAMPION_GET_ERROR 	= "チャンピオン情報が取得出来ませんでした"
-var ERROR_ID_SN_SPELLS_GET_ERROR 	= "サモナースペル情報が取得出来ませんでした"
+var ERROR_ID_SNUM_NAME_ERROR 		= "サモナーネームが不正です";
+var ERROR_ID_MASTERY_LISTDATA_GET_ERROR = "マスタリーリストが取得出来ませんでした";
+var ERROR_ID_VERSION_GET_ERROR 		= "バージョン情報が取得出来ませんでした";
+var ERROR_ID_SNUM_GET_ERROR 		= "サモナーネーム情報が取得出来ませんでした";
+var ERROR_ID_CHAMPION_GET_ERROR 	= "チャンピオン情報が取得出来ませんでした";
+var ERROR_ID_SN_SPELLS_GET_ERROR 	= "サモナースペル情報が取得出来ませんでした";
 
 ////////////////////////////////////////////////////////////////////////////////////
 //
@@ -45,7 +58,7 @@ function summonerLookUp()
 
 			var jqXHRList = [];
 
-			for (var i = 0, max = request.length ; i < max ; ++i)
+			for( var i = 0, max = request.length ; i < max ; ++i )
 			{
 				jqXHRList.push($.ajax(
 				{
@@ -62,7 +75,7 @@ function summonerLookUp()
 				var statuses = [];
 				var jqXHRResultList = [];
 
-				for (var i = 0, max = arguments.length ; i < max ; ++i)
+				for( var i = 0, max = arguments.length ; i < max ; ++i )
 				{
 					var result = arguments[i];
 					json.push(result[0]);
@@ -122,7 +135,7 @@ function summonerLookUp()
 			$.when.apply(null, jqXHRList).fail(function ()
 			{
 				console.log(jqXHRList);
-				for (var i = 0 ; i < jqXHRList.length ; ++i)
+				for( var i = 0 ; i < jqXHRList.length ; ++i )
 				{
 					if( jqXHRList[i].statusText === "error" )
 					{
@@ -174,7 +187,7 @@ function ShowMastery()
 			var target = document.getElementById("mastery");
 			var newTag;
 
-			for(var i in json.data)
+			for( var i in json.data )
 			{
 				//console.log(i + ':' + json.data[i].name);
 				newTag = document.createElement("mastery_"+i);
@@ -242,6 +255,9 @@ function GetRecentMatchHistory()
 			var newTag;
 
 			var gameMode = "";
+			var gameType = "";
+			var gameSubType = "";
+			var gameModeMess = "";
 			var champ_img = "";
 			var champ_name = "";
 			var spell1_img = "";
@@ -251,14 +267,28 @@ function GetRecentMatchHistory()
 			var isSpell1 = false;
 			var isSpell2 = false;
 
+			var game_data = new Array();
+
 			$("#match").children().remove();
 
-			for(var i in json.games)
+			for( var i in json.games )
 			{
-				if( json.games[i].gameMode === "ARAM" )
-					gameMode = "アラーム";
+				game_data[i] = new SetGameData(json.games[i]);
 
-				for(var j in JSON_DATA_CHAMP_IMG.data)
+				gameMode = json.games[i].gameMode;
+				gameType = json.games[i].gameType;
+				gameSubType = json.games[i].subType;
+
+				for( var j = 0 ; j < GAME_MODE_MESS[game_data[i].gameMode].length ; ++j )
+				{
+					if( gameType === GAME_MODE_MESS[gameMode][j].type && gameSubType === GAME_MODE_MESS[gameMode][j].sub_type )
+					{
+						gameModeMess = GAME_MODE_MESS[gameMode][j].mess;
+						break;
+					}
+				}
+
+				for( var j in JSON_DATA_CHAMP_IMG.data )
 				{
 					if( json.games[i].championId == JSON_DATA_CHAMP_IMG.data[j].id )
 					{
@@ -271,7 +301,7 @@ function GetRecentMatchHistory()
 				isSpell1 = false;
 				isSpell2 = false;
 
-				for(var j in JSON_DATA_SN_SPELLS_IMG.data)
+				for( var j in JSON_DATA_SN_SPELLS_IMG.data )
 				{
 					if( json.games[i].spell1 == JSON_DATA_SN_SPELLS_IMG.data[j].id )
 					{
@@ -298,10 +328,11 @@ function GetRecentMatchHistory()
 						   "<br />" + json.data[i].description +
 						   "<br />";
 */
-				newTag.innerHTML = "<br />" + gameMode +
+				newTag.innerHTML = "<br />" + gameModeMess +
 						   "<br />" + "<img src='" + CDN_URL + "/" + VER_CHAMPION + "/img/champion/" + champ_img + "' width='48' height='48' title='" + champ_name +"'>" +
 						   "<img src='" + CDN_URL + "/" + VER_SN_SPELLS + "/img/spell/" + spell1_img + "' width='24' height='24' title='" + spell1_name +"'>" +
-						   "<img src='" + CDN_URL + "/" + VER_SN_SPELLS + "/img/spell/" + spell2_img + "' width='24' height='24' title='" + spell2_name +"'>";
+						   "<img src='" + CDN_URL + "/" + VER_SN_SPELLS + "/img/spell/" + spell2_img + "' width='24' height='24' title='" + spell2_name +"'>" +
+						   " " + (game_data[i].win ? "Win" : "Lose");
 
 				target.appendChild(newTag);
 			}
@@ -311,4 +342,40 @@ function GetRecentMatchHistory()
 			console.log("GetRecentMatchHistory");
 		}
 	});
+}
+
+
+/////////////////////////////////////////////////
+//
+function SetGameData(data)
+{
+	this.gameMode = data.gameMode; // ゲームモード
+
+	this.assists = data.stats.assists; // アシスト数
+	this.championsKilled = data.stats.championsKilled; // チャンピオン数
+	this.goldEarned = data.stats.goldEarned; // 取得ゴールド量
+	this.goldSpent = data.stats.goldSpent; // 使用ゴールド量
+	this.killingSprees = data.stats.killingSprees; // 連続キル回数
+	this.largestCriticalStrike = data.stats.largestCriticalStrike || 0;
+	this.largestKillingSpree = data.stats.largestKillingSpree; // 最大連続キル数
+	this.largestMultiKill = data.stats.largestMultiKill; // 最大マルチキル数
+	this.magicDamageDealtPlayer = data.stats.magicDamageDealtPlayer;
+	this.magicDamageDealtToChampions = data.stats.magicDamageDealtToChampions;
+	this.magicDamageTaken = data.stats.magicDamageTaken;
+	this.minionsKilled = data.stats.minionsKilled; // ミニオンキル数
+	this.numDeaths = data.stats.numDeaths; // デス数
+	this.physicalDamageDealtPlayer = data.stats.physicalDamageDealtPlayer;
+	this.timePlayed = data.stats.timePlayed; // プレイ時間
+	this.totalDamageDealt = data.stats.totalDamageDealt;
+	this.totalDamageDealtToBuildings = data.stats.totalDamageDealtToBuildings;
+	this.totalDamageDealtToChampions = data.stats.totalDamageDealtToChampions;
+	this.totalDamageTaken = data.stats.totalDamageTaken;
+	this.totalHeal = data.stats.totalHeal; // 合計回復量
+	this.totalTimeCrowdControlDealt = data.stats.totalTimeCrowdControlDealt;
+	this.totalUnitsHealed = data.stats.totalUnitsHealed; // ユニット回復量
+	this.trueDamageDealtPlayer = data.stats.trueDamageDealtPlayer;
+	this.trueDamageDealtToChampions = data.stats.trueDamageDealtToChampions;
+	this.trueDamageTaken = data.stats.trueDamageTaken;
+	this.turretsKilled = data.stats.turretsKilled; // 破壊タレット数
+	this.win = data.stats.win; // 勝敗
 }
