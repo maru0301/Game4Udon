@@ -28,8 +28,6 @@ var GAME_MODE_MESS = {
 			],
 };
 
-console.log(GAME_MODE_MESS["ARAM"][0].type);
-
 ////////////////////////////////////////////////////////////////////////////////////
 // Error Message
 var ERROR_ID_SNUM_NAME_ERROR 		= "サモナーネームが不正です";
@@ -82,7 +80,7 @@ function summonerLookUp()
 					statuses.push(result[1]);
 					jqXHRResultList.push(result[3]);
 				}
-				console.log(json);
+//				console.log(json);
 //				console.log(statuses);
 //				console.log(result);
 
@@ -168,7 +166,8 @@ function ShowSummonerInfo(userDataJson, summonerName)
 	var summonerID = userDataJson[summonerName].id;
 
 	document.getElementById("sLevel").innerHTML = summonerLevel;
-	document.getElementById("sID").innerHTML = summonerID;
+//	document.getElementById("sID").innerHTML = summonerID;
+console.log(summonerID);
 }
 
 function ShowMastery()
@@ -201,7 +200,7 @@ function ShowMastery()
 		},
 		error: function (XMLHttpRequest, textStatus, errorThrown)
 		{
-			console.log(ERROR_ID_MASTERY_LISTDATA_ERROR);
+			errorDlg(ERROR_ID_MASTERY_LISTDATA_ERROR);
 		}
 	});
 }
@@ -279,6 +278,7 @@ function GetRecentMatchHistory()
 				gameType = json.games[i].gameType;
 				gameSubType = json.games[i].subType;
 
+				// ゲームモード
 				for( var j = 0 ; j < GAME_MODE_MESS[game_data[i].gameMode].length ; ++j )
 				{
 					if( gameType === GAME_MODE_MESS[gameMode][j].type && gameSubType === GAME_MODE_MESS[gameMode][j].sub_type )
@@ -288,6 +288,7 @@ function GetRecentMatchHistory()
 					}
 				}
 
+				// チャンピオン
 				for( var j in JSON_DATA_CHAMP_IMG.data )
 				{
 					if( json.games[i].championId == JSON_DATA_CHAMP_IMG.data[j].id )
@@ -298,6 +299,7 @@ function GetRecentMatchHistory()
 					}
 				}
 
+				// サモナースペル
 				isSpell1 = false;
 				isSpell2 = false;
 
@@ -322,12 +324,7 @@ function GetRecentMatchHistory()
 				}
 
 				newTag = document.createElement("match_"+i);
-/*
-				newTag.innerHTML = "<br />" + json.data[i].name +
-						   "<br />" + "<img src='" + CDN_URL + "/" + VER_MASTERY + "/img/mastery/" + i + ".png' width='48' height='48' title='" + json.data[i].name +"'>" +
-						   "<br />" + json.data[i].description +
-						   "<br />";
-*/
+
 				newTag.innerHTML = "<br />" + gameModeMess +
 						   "<br />" + "<img src='" + CDN_URL + "/" + VER_CHAMPION + "/img/champion/" + champ_img + "' width='48' height='48' title='" + champ_name +"'>" +
 						   "<img src='" + CDN_URL + "/" + VER_SN_SPELLS + "/img/spell/" + spell1_img + "' width='24' height='24' title='" + spell1_name +"'>" +
@@ -336,6 +333,16 @@ function GetRecentMatchHistory()
 
 				target.appendChild(newTag);
 			}
+
+			// うどん
+			$("#udon").children().remove();
+
+			target = document.getElementById("udon");
+			newTag = document.createElement("recommend_udon");
+
+//			newTag.innerHTML = "<br />" + "今の貴方におすすめのうどんはこちら";
+
+			target.appendChild(newTag);
 		},
 		error: function (XMLHttpRequest, textStatus, errorThrown)
 		{
@@ -378,4 +385,9 @@ function SetGameData(data)
 	this.trueDamageTaken = data.stats.trueDamageTaken;
 	this.turretsKilled = data.stats.turretsKilled; // 破壊タレット数
 	this.win = data.stats.win; // 勝敗
+}
+
+function GetRecommendUdon(data)
+{
+
 }
