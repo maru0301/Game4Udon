@@ -12,6 +12,11 @@ var VER_SN_SPELLS = "";
 
 var CDN_URL = "";
 
+// 本気度
+var EARNESTNESS_SN_NORMAL = 1.0;
+var EARNESTNESS_SN_RANKE_SOLO = 2.0;
+var EARNESTNESS_SN_ARAM = 0.5;
+
 ///////////////////////////////////////
 var JSON_DATA_CHAMP_IMG 	= {};
 var JSON_DATA_SN_SPELLS_IMG 	= {};
@@ -331,7 +336,7 @@ function GetRecentMatchHistory()
 						   "<img src='" + CDN_URL + "/" + VER_SN_SPELLS + "/img/spell/" + spell2_img + "' width='24' height='24' title='" + spell2_name +"'>" +
 						   " " + (game_data[i].win ? "Win" : "Lose");
 
-				target.appendChild(newTag);
+//				target.appendChild(newTag);
 			}
 
 			// うどん
@@ -339,6 +344,9 @@ function GetRecentMatchHistory()
 
 			target = document.getElementById("udon");
 			newTag = document.createElement("recommend_udon");
+
+			var udon_id = GetRecommendUdon(game_data);
+console.log("udon_id : " + udon_id);
 
 //			newTag.innerHTML = "<br />" + "今の貴方におすすめのうどんはこちら";
 
@@ -357,37 +365,104 @@ function GetRecentMatchHistory()
 function SetGameData(data)
 {
 	this.gameMode = data.gameMode; // ゲームモード
+	this.gameType = data.gameType; // ゲームタイプ
+	this.gamesubType = data.subType;
+	this.win = data.stats.win; // 勝敗
+	this.timePlayed = data.stats.timePlayed; // プレイ時間(秒)
 
+	this.championsKilled = data.stats.championsKilled; // チャンピオンキル数
 	this.assists = data.stats.assists; // アシスト数
-	this.championsKilled = data.stats.championsKilled; // チャンピオン数
-	this.goldEarned = data.stats.goldEarned; // 取得ゴールド量
-	this.goldSpent = data.stats.goldSpent; // 使用ゴールド量
+	this.numDeaths = data.stats.numDeaths; // デス数
 	this.killingSprees = data.stats.killingSprees; // 連続キル回数
-	this.largestCriticalStrike = data.stats.largestCriticalStrike || 0;
 	this.largestKillingSpree = data.stats.largestKillingSpree; // 最大連続キル数
 	this.largestMultiKill = data.stats.largestMultiKill; // 最大マルチキル数
-	this.magicDamageDealtPlayer = data.stats.magicDamageDealtPlayer;
-	this.magicDamageDealtToChampions = data.stats.magicDamageDealtToChampions;
-	this.magicDamageTaken = data.stats.magicDamageTaken;
+
 	this.minionsKilled = data.stats.minionsKilled; // ミニオンキル数
-	this.numDeaths = data.stats.numDeaths; // デス数
+	this.turretsKilled = data.stats.turretsKilled; // 破壊タレット数
+
+	this.goldEarned = data.stats.goldEarned; // 取得ゴールド量
+	this.goldSpent = data.stats.goldSpent; // 使用ゴールド量
+	// 与えたダメージ
+	this.physicalDamageDealtToChampions = data.stats.physicalDamageDealtToChampions; // 与えたメージ量(物理)
 	this.physicalDamageDealtPlayer = data.stats.physicalDamageDealtPlayer;
-	this.timePlayed = data.stats.timePlayed; // プレイ時間
-	this.totalDamageDealt = data.stats.totalDamageDealt;
+	this.magicDamageDealtToChampions = data.stats.magicDamageDealtToChampions; // 与えたメージ量(魔法)
+	this.magicDamageDealtPlayer = data.stats.magicDamageDealtPlayer;
+	this.trueDamageDealtToChampions = data.stats.trueDamageDealtToChampions; // 与えたメージ量(確定ダメージ)
+	this.trueDamageDealtPlayer = data.stats.trueDamageDealtPlayer;
+	this.totalTimeCrowdControlDealt = data.stats.totalTimeCrowdControlDealt;
+	this.largestCriticalStrike = data.stats.largestCriticalStrike || 0; // 最大クリティカルダメージ
+
+	this.totalDamageDealt = data.stats.totalDamageDealt; // 与えたダメージ量(全ダメージ)
 	this.totalDamageDealtToBuildings = data.stats.totalDamageDealtToBuildings;
 	this.totalDamageDealtToChampions = data.stats.totalDamageDealtToChampions;
-	this.totalDamageTaken = data.stats.totalDamageTaken;
-	this.totalHeal = data.stats.totalHeal; // 合計回復量
-	this.totalTimeCrowdControlDealt = data.stats.totalTimeCrowdControlDealt;
-	this.totalUnitsHealed = data.stats.totalUnitsHealed; // ユニット回復量
-	this.trueDamageDealtPlayer = data.stats.trueDamageDealtPlayer;
-	this.trueDamageDealtToChampions = data.stats.trueDamageDealtToChampions;
+	// 受けたダメージ
+	this.physicalDamageTaken = data.stats.physicalDamageTaken;
+	this.magicDamageTaken = data.stats.magicDamageTaken;
 	this.trueDamageTaken = data.stats.trueDamageTaken;
-	this.turretsKilled = data.stats.turretsKilled; // 破壊タレット数
-	this.win = data.stats.win; // 勝敗
+	this.totalDamageTaken = data.stats.totalDamageTaken;
+	// 回復
+	this.totalHeal = data.stats.totalHeal; // 合計回復量
+	this.totalUnitsHealed = data.stats.totalUnitsHealed; // ユニット回復量
 }
 
 function GetRecommendUdon(data)
 {
+	var udon_id = 0;
+	var earnestness = 0.0; // 本気度
 
+	var total_game_num = 0; // 試合数
+	var total_win = 0; // 勝利数
+	var total_kill = 0;
+	var total_assists = 0;
+	var total_dead = 0;
+	var total_killingSprees = 0;
+	var total_play_time = 0;
+	var total_turret_kill = 0;
+	var total_damage_dealt = 0;
+	var total_damage_taken = 0;
+
+	var kda = 0.00;
+	var win_rate = 0;
+	var play_time = 0;
+	
+	for( var i = 0 ; i < data.length ; ++i )
+	{
+		total_win += data.stats.win ? 1 : 0;
+		total_kill += data.stats.championsKilled;
+		total_assists += data.stats.assists;
+		total_dead += data.stats.numDeaths;
+		total_killingSprees += data.stats.killingSprees;
+		total_play_time += data.stats.timePlayed;
+		total_turret_kill += data.stats.turretsKilled;
+		total_damage_dealt += data.totalDamageDealt;
+		total_damage_taken += data.totalDamageTaken;
+
+		switch( data.gameMode )
+		{
+			case "CLASSIC": // サモリフ
+				if( data.gamesubType === "NORMAL" )
+				{
+					earnestness += EARNESTNESS_SN_NORMAL;
+				}
+				else if( data.gamesubType === "RANKED_SOLO_5x5" )
+				{
+					earnestness += EARNESTNESS_SN_RANKE_SOLO;
+				}
+				break;
+			case "ARAM": // アラーム
+				earnestness += EARNESTNESS_SN_ARAM;
+				break;
+		}
+	}
+
+	total_game_num = data.length;
+
+	// KDA
+	kda = ( total_kill + total_assists ) / total_dead;
+	// Win Rate
+	win_rate = ( total_win / total_game_num ) * 100;
+	// Play time
+	play_time = total_play_time - ( total_game_num * 1200 );
+
+	return udon_id;
 }
