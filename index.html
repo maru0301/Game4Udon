@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="ja">
 	<head>
 		<meta charset="utf-8">
@@ -8,6 +7,7 @@
 		<link href="./css/jquery.mb.YTPlayer.min.css" media="all" rel="stylesheet" type="text/css">
 		<link rel="stylesheet" type="text/css" href="./css/style.css" />
 		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<!--		<script type="text/javascript" src="https://rawgit.com/padolsey-archive/jquery.fn/master/cross-domain-ajax/jquery.xdomainajax.js"></script> -->
 		<script type="text/javascript" src="./js/jquery.mb.YTPlayer.min.js"></script>
 		<script type="text/javascript" src="./js/main.js"></script>
 	</head>
@@ -20,7 +20,10 @@
 				<article>
 					<h1>サモナーネーム</h1>
 					<input id="summonerName" />
+					<input type="submit" onclick="Test();" />
+<!--
 					<input type="submit" onclick="summonerLookUp();" />
+-->
 					<br />
 					<br />サモナーレベル: <span id="sLevel"></span>
 <!--
@@ -45,7 +48,9 @@
 -->
 			</section>
 			<div id="bg"></div>
+<!--
 			<script type="text/javascript" src="./js/video.js"></script>
+-->
 		</main>
 	</body>
 </html>

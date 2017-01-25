@@ -47,6 +47,7 @@ var ERROR_ID_SN_SPELLS_GET_ERROR 	= "サモナースペル情報が取得出来�
 function summonerLookUp()
 {
 	$.getScript('https://sites.google.com/site/tmaruprofile/global.js',function(){
+		API_KEY = "561cb811-20fb-4e50-bc7f-3f3c8cd345e4";
 		var SUMMONER_NAME = "";
 		SUMMONER_NAME = $("#summonerName").val();
 
@@ -54,9 +55,9 @@ function summonerLookUp()
 		{
 			var request = [
 				{ error_id: ERROR_ID_VERSION_GET_ERROR,		url: 'https://global.api.pvp.net/api/lol/static-data/jp/v1.2/realm?api_key=' + API_KEY  }, // Version
-				{ error_id: ERROR_ID_SNUM_GET_ERROR,		url: 'https://' + COUNTRY_ID2.toLowerCase() + '.api.pvp.net/api/lol/' + COUNTRY_ID2.toLowerCase() + '/v1.4/summoner/by-name/' + SUMMONER_NAME + '?api_key=' + API_KEY  }, // サモナーID
-				{ error_id: ERROR_ID_CHAMPION_GET_ERROR,	url: 'https://global.api.pvp.net/api/lol/static-data/jp/v1.2/champion?champData=image&api_key=' + API_KEY  }, // champion Img
-				{ error_id: ERROR_ID_SN_SPELLS_GET_ERROR,	url: 'https://global.api.pvp.net/api/lol/static-data/jp/v1.2/summoner-spell?spellData=image&api_key=' + API_KEY  }, // summoner spell Img
+//				{ error_id: ERROR_ID_SNUM_GET_ERROR,		url: 'https://' + COUNTRY_ID2.toLowerCase() + '.api.pvp.net/api/lol/' + COUNTRY_ID2.toLowerCase() + '/v1.4/summoner/by-name/' + SUMMONER_NAME + '?api_key=' + API_KEY  }, // サモナーID
+//				{ error_id: ERROR_ID_CHAMPION_GET_ERROR,	url: 'https://global.api.pvp.net/api/lol/static-data/jp/v1.2/champion?champData=image&api_key=' + API_KEY  }, // champion Img
+//				{ error_id: ERROR_ID_SN_SPELLS_GET_ERROR,	url: 'https://global.api.pvp.net/api/lol/static-data/jp/v1.2/summoner-spell?spellData=image&api_key=' + API_KEY  }, // summoner spell Img
 			];
 
 			var jqXHRList = [];
@@ -96,6 +97,8 @@ function summonerLookUp()
 				var summonerJson = json[1];
 				var champImgJson = json[2];
 				var spellsImgJson = json[3];
+
+				console.log(verJson);
 
 				// Version
 				VER_CHAMPION = verJson.n.champion;
@@ -466,3 +469,27 @@ function GetRecommendUdon(data)
 
 	return udon_id;
 }
+
+function Test()
+{
+	var key = "561cb811-20fb-4e50-bc7f-3f3c8cd345e4";
+	$.ajax(
+	{
+//		url: 'https://global.api.pvp.net/api/lol/static-data/jp/v1.2/realm?api_key=561cb811-20fb-4e50-bc7f-3f3c8cd345e4',
+		url: 'https://' + COUNTRY_ID2.toLowerCase() + '.api.pvp.net/api/lol/' + COUNTRY_ID2.toLowerCase() + '/v1.4/summoner/by-name/' + 'tmaru' + '?api_key='+ key,
+		type: 'GET',
+		dataType: 'json',
+		data: {},
+
+		success: function (json)
+		{
+			console.log("Test: success");
+			console.log(json);
+		},
+		error: function (XMLHttpRequest, textStatus, errorThrown)
+		{
+			errorDlg("Test");
+		}
+	});
+}
+
