@@ -1,0 +1,41 @@
+Skip to content
+This repository
+Search
+Pull requests
+Issues
+Gist
+ @maru0301
+ Watch 79
+  Star 1,086
+  Fork 334 ccampbell/chromephp
+ Code  Issues 17  Pull requests 9  Projects 0  Wiki  Pulse  Graphs
+Branch: master Find file Copy pathchromephp/composer.json
+02dee2c  on 8 Apr 2013
+@ccampbell ccampbell Update composer.json
+2 contributors @pcalves @ccampbell
+RawBlameHistory     
+25 lines (24 sloc)  624 Bytes
+{
+    "name": "ccampbell/chromephp",
+    "type": "library",
+    "description": "Log variables to the Chrome console (via Chrome Logger Google Chrome extension).",
+    "keywords": ["log","logging"],
+    "homepage": "http://github.com/ccampbell/chromephp",
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "Craig Campbell",
+            "email": "iamcraigcampbell@gmail.com",
+            "homepage": "http://craig.is",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.0.0"
+    },
+    "autoload": {
+        "psr-0": {
+            "ChromePhp": ""
+        }
+    }
+}
