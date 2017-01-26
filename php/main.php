@@ -44,7 +44,7 @@ $func_tbl = array(
 //-------------------------------------------------
 #ChromePhp::log($func_tbl[$func_name]);
 
-echo $func_tbl["GetVersion"];
+echo $func_tbl[$func_name];
 
 //-------------------------------------------------
 
