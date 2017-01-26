@@ -47,17 +47,22 @@ var ERROR_ID_SN_SPELLS_GET_ERROR 	= "サモナースペル情報が取得出来�
 function summonerLookUp()
 {
 	$.getScript('https://sites.google.com/site/tmaruprofile/global.js',function(){
-		API_KEY = "561cb811-20fb-4e50-bc7f-3f3c8cd345e4";
 		var SUMMONER_NAME = "";
 		SUMMONER_NAME = $("#summonerName").val();
 
 		if(SUMMONER_NAME !== "")
 		{
+/*
 			var request = [
 				{ error_id: ERROR_ID_VERSION_GET_ERROR,		url: 'https://global.api.pvp.net/api/lol/static-data/jp/v1.2/realm?api_key=' + API_KEY  }, // Version
 //				{ error_id: ERROR_ID_SNUM_GET_ERROR,		url: 'https://' + COUNTRY_ID2.toLowerCase() + '.api.pvp.net/api/lol/' + COUNTRY_ID2.toLowerCase() + '/v1.4/summoner/by-name/' + SUMMONER_NAME + '?api_key=' + API_KEY  }, // サモナーID
 //				{ error_id: ERROR_ID_CHAMPION_GET_ERROR,	url: 'https://global.api.pvp.net/api/lol/static-data/jp/v1.2/champion?champData=image&api_key=' + API_KEY  }, // champion Img
 //				{ error_id: ERROR_ID_SN_SPELLS_GET_ERROR,	url: 'https://global.api.pvp.net/api/lol/static-data/jp/v1.2/summoner-spell?spellData=image&api_key=' + API_KEY  }, // summoner spell Img
+			];
+*/
+			var request = [
+				{ error_id: ERROR_ID_VERSION_GET_ERROR,		url: './php/main.php', data: { func:"GetVersion" },  }, // Version
+				{ error_id: ERROR_ID_VERSION_GET_ERROR,		url: './php/main.php', data: { func:"GetVersion" },  }, // Version
 			];
 
 			var jqXHRList = [];
@@ -69,7 +74,7 @@ function summonerLookUp()
 					url: request[i].url,
 					type: 'GET',
 					dataType: 'json',
-					data: {}
+					data: request[i].data,
 				}));
 			}
 
@@ -78,7 +83,6 @@ function summonerLookUp()
 				var json = [];
 				var statuses = [];
 				var jqXHRResultList = [];
-
 				for( var i = 0, max = arguments.length ; i < max ; ++i )
 				{
 					var result = arguments[i];
@@ -86,6 +90,8 @@ function summonerLookUp()
 					statuses.push(result[1]);
 					jqXHRResultList.push(result[3]);
 				}
+
+//				console.log(arguments);
 //				console.log(json);
 //				console.log(statuses);
 //				console.log(result);
@@ -99,6 +105,7 @@ function summonerLookUp()
 				var spellsImgJson = json[3];
 
 				console.log(verJson);
+				console.log(verJson.n);
 
 				// Version
 				VER_CHAMPION = verJson.n.champion;
@@ -149,6 +156,7 @@ function summonerLookUp()
 					}
 				}
 			});
+
 		}
 		else
 		{
@@ -472,19 +480,18 @@ function GetRecommendUdon(data)
 
 function Test()
 {
-	var key = "561cb811-20fb-4e50-bc7f-3f3c8cd345e4";
 	$.ajax(
 	{
-//		url: 'https://global.api.pvp.net/api/lol/static-data/jp/v1.2/realm?api_key=561cb811-20fb-4e50-bc7f-3f3c8cd345e4',
-		url: 'https://' + COUNTRY_ID2.toLowerCase() + '.api.pvp.net/api/lol/' + COUNTRY_ID2.toLowerCase() + '/v1.4/summoner/by-name/' + 'tmaru' + '?api_key='+ key,
+		url: './php/main.php',
 		type: 'GET',
 		dataType: 'json',
-		data: {},
+		data: { func:"GetVersion" },
 
 		success: function (json)
 		{
 			console.log("Test: success");
 			console.log(json);
+//			var data = JSON.parse(json);
 		},
 		error: function (XMLHttpRequest, textStatus, errorThrown)
 		{
