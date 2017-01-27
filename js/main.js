@@ -46,27 +46,23 @@ var ERROR_ID_SN_SPELLS_GET_ERROR 	= "サモナースペル情報が取得出来�
 //
 function summonerLookUp()
 {
+//	console.log("summonerLookUp");
+	
 	$.getScript('https://sites.google.com/site/tmaruprofile/global.js',function(){
 		var SUMMONER_NAME = "";
 		SUMMONER_NAME = $("#summonerName").val();
-
+		
 		if(SUMMONER_NAME !== "")
 		{
-/*
-			var request = [
-				{ error_id: ERROR_ID_VERSION_GET_ERROR,		url: 'https://global.api.pvp.net/api/lol/static-data/jp/v1.2/realm?api_key=' + API_KEY  }, // Version
-//				{ error_id: ERROR_ID_SNUM_GET_ERROR,		url: 'https://' + COUNTRY_ID2.toLowerCase() + '.api.pvp.net/api/lol/' + COUNTRY_ID2.toLowerCase() + '/v1.4/summoner/by-name/' + SUMMONER_NAME + '?api_key=' + API_KEY  }, // サモナーID
-//				{ error_id: ERROR_ID_CHAMPION_GET_ERROR,	url: 'https://global.api.pvp.net/api/lol/static-data/jp/v1.2/champion?champData=image&api_key=' + API_KEY  }, // champion Img
-//				{ error_id: ERROR_ID_SN_SPELLS_GET_ERROR,	url: 'https://global.api.pvp.net/api/lol/static-data/jp/v1.2/summoner-spell?spellData=image&api_key=' + API_KEY  }, // summoner spell Img
-			];
-*/
 			var request = [
 				{ error_id: ERROR_ID_VERSION_GET_ERROR,		url: './php/main.php', data: { func:"GetVersion" },  }, // Version
-				{ error_id: ERROR_ID_VERSION_GET_ERROR,		url: './php/main.php', data: { func:"GetVersion" },  }, // Version
+				{ error_id: ERROR_ID_SNUM_GET_ERROR,		url: './php/main.php', data: { func:"GetSummonerByName", summonerName:SUMMONER_NAME, country_id1:COUNTRY_ID2.toLowerCase(), country_id2:COUNTRY_ID2.toUpperCase() },  }, // サモナーID
+				{ error_id: ERROR_ID_CHAMPION_GET_ERROR,	url: './php/main.php', data: { func:"GetChampionImage" },  }, // champion Img
+				{ error_id: ERROR_ID_SN_SPELLS_GET_ERROR,	url: './php/main.php', data: { func:"GetSummonerSpells" },  }, // summoner spell Img
 			];
-
+			
 			var jqXHRList = [];
-
+			
 			for( var i = 0, max = request.length ; i < max ; ++i )
 			{
 				jqXHRList.push($.ajax(
@@ -77,7 +73,7 @@ function summonerLookUp()
 					data: request[i].data,
 				}));
 			}
-
+			
 			$.when.apply(null, jqXHRList).done(function ()
 			{
 				var json = [];
@@ -90,12 +86,12 @@ function summonerLookUp()
 					statuses.push(result[1]);
 					jqXHRResultList.push(result[3]);
 				}
-
+				
 //				console.log(arguments);
 //				console.log(json);
 //				console.log(statuses);
 //				console.log(result);
-
+				
 				///////////////////////////////////////////////////////////
 				// Global情報取得
 				///////////////////////////////////////////////////////////
@@ -103,48 +99,48 @@ function summonerLookUp()
 				var summonerJson = json[1];
 				var champImgJson = json[2];
 				var spellsImgJson = json[3];
-
-				console.log(verJson);
-				console.log(verJson.n);
-
+				
+//				console.log(verJson);
+//				console.log(summonerJson);
+				
 				// Version
 				VER_CHAMPION = verJson.n.champion;
 				VER_ITEM = verJson.n.item;
 				VER_MASTERY = verJson.n.mastery;
 				VER_RUNE = verJson.n.rune;
 				VER_SN_SPELLS = verJson.n.summoner;
-
+				
 				CDN_URL = verJson.cdn;
-
+				
 //				console.log("VER_CHAMPION : " + VER_CHAMPION);
 //				console.log("VER_ITEM : " + VER_ITEM);
 //				console.log("VER_MASTERY : " + VER_MASTERY);
 //				console.log("VER_CHAMPION : " + VER_CHAMPION);
 //				console.log("VER_RUNE : " + VER_RUNE);
 //				console.log("CDN_URL : " + CDN_URL);
-
+				
 				// サモナーID
 				var SUMMONER_NAME_NOSPACES = SUMMONER_NAME.replace(" ", "");
 				SUMMONER_NAME_NOSPACES = SUMMONER_NAME_NOSPACES.toLowerCase().trim();
-
+				
 				SUM_ID = summonerJson[SUMMONER_NAME_NOSPACES].id; // サモナーID保存
-
+				
 				// Jsonをキャッシュ
 				JSON_DATA_CHAMP_IMG = champImgJson;
 				JSON_DATA_SN_SPELLS_IMG = spellsImgJson;
-
+				
 				///////////////////////////////////////////////////////////
 				// 表示
 				///////////////////////////////////////////////////////////
-
+				
 				ShowSummonerInfo(summonerJson, SUMMONER_NAME_NOSPACES); // サモナー情報表示
-
+				
 //				GetMatchHistory();
 				GetRecentMatchHistory(); // 試合情報表示
-
+				
 //				ShowMastery();　// マスタリー表示
 			});
-
+			
 			$.when.apply(null, jqXHRList).fail(function ()
 			{
 				console.log(jqXHRList);
@@ -156,7 +152,6 @@ function summonerLookUp()
 					}
 				}
 			});
-
 		}
 		else
 		{
@@ -180,7 +175,7 @@ function ShowSummonerInfo(userDataJson, summonerName)
 {
 	var summonerLevel = userDataJson[summonerName].summonerLevel;
 	var summonerID = userDataJson[summonerName].id;
-
+	
 	document.getElementById("sLevel").innerHTML = summonerLevel;
 //	document.getElementById("sID").innerHTML = summonerID;
 console.log(summonerID);
@@ -194,14 +189,14 @@ function ShowMastery()
 		type: 'GET',
 		dataType: 'json',
 		data: {},
-
+		
 		success: function (json)
 		{
 			console.log("ShowMastery: success");
-
+			
 			var target = document.getElementById("mastery");
 			var newTag;
-
+			
 			for( var i in json.data )
 			{
 				//console.log(i + ':' + json.data[i].name);
@@ -210,7 +205,7 @@ function ShowMastery()
 						   "<br />" + "<img src='" + CDN_URL + "/" + VER_MASTERY + "/img/mastery/" + i + ".png' width='48' height='48' title='" + json.data[i].name +"'>" +
 						   "<br />" + json.data[i].description +
 						   "<br />";
-
+				
 				target.appendChild(newTag);
 			}
 		},
@@ -227,19 +222,19 @@ function GetMatchHistory()
 		"RANKED_SOLO_5x5",
 		"RANKED_FLEX_SR",
 	];
-
+	
 	var season = [
 		"SEASON2016",
 		"SEASON2017",
 	];
-
+	
 	$.ajax(
 	{
 		url: 'https://jp.api.pvp.net/api/lol/jp/v2.2/matchlist/by-summoner/'+ SUM_ID + "?rankedQueues="+ mode[1] + "&seasons=" + season[1] + "&api_key=" + API_KEY,
 		type: 'GET',
 		dataType: 'json',
 		data: {},
-
+		
 		success: function (json)
 		{
 	console.log("GetMatchHistory: success");
@@ -260,15 +255,15 @@ function GetRecentMatchHistory()
 		type: 'GET',
 		dataType: 'json',
 		data: {},
-
+		
 		success: function (json)
 		{
 			console.log("GetRecentMatchHistory: success");
 			console.log(json.games);
-
+			
 			var target = document.getElementById("match");
 			var newTag;
-
+			
 			var gameMode = "";
 			var gameType = "";
 			var gameSubType = "";
@@ -281,19 +276,19 @@ function GetRecentMatchHistory()
 			var spell2_name = "";
 			var isSpell1 = false;
 			var isSpell2 = false;
-
+			
 			var game_data = new Array();
-
+			
 			$("#match").children().remove();
-
+			
 			for( var i in json.games )
 			{
 				game_data[i] = new SetGameData(json.games[i]);
-
+				
 				gameMode = json.games[i].gameMode;
 				gameType = json.games[i].gameType;
 				gameSubType = json.games[i].subType;
-
+				
 				// ゲームモード
 				for( var j = 0 ; j < GAME_MODE_MESS[game_data[i].gameMode].length ; ++j )
 				{
@@ -303,7 +298,7 @@ function GetRecentMatchHistory()
 						break;
 					}
 				}
-
+				
 				// チャンピオン
 				for( var j in JSON_DATA_CHAMP_IMG.data )
 				{
@@ -314,11 +309,11 @@ function GetRecentMatchHistory()
 						break;
 					}
 				}
-
+				
 				// サモナースペル
 				isSpell1 = false;
 				isSpell2 = false;
-
+				
 				for( var j in JSON_DATA_SN_SPELLS_IMG.data )
 				{
 					if( json.games[i].spell1 == JSON_DATA_SN_SPELLS_IMG.data[j].id )
@@ -327,40 +322,40 @@ function GetRecentMatchHistory()
 						spell1_name = JSON_DATA_SN_SPELLS_IMG.data[j].name;
 						isSpell1 = true;
 					}
-
+					
 					if( json.games[i].spell2 == JSON_DATA_SN_SPELLS_IMG.data[j].id )
 					{
 						spell2_img = JSON_DATA_SN_SPELLS_IMG.data[j].image.full;
 						spell2_name = JSON_DATA_SN_SPELLS_IMG.data[j].name;
 						isSpell2 = true;
 					}
-
+					
 					if( isSpell1 == true && isSpell2 == true )
 						break;
 				}
-
+				
 				newTag = document.createElement("match_"+i);
-
+				
 				newTag.innerHTML = "<br />" + gameModeMess +
 						   "<br />" + "<img src='" + CDN_URL + "/" + VER_CHAMPION + "/img/champion/" + champ_img + "' width='48' height='48' title='" + champ_name +"'>" +
 						   "<img src='" + CDN_URL + "/" + VER_SN_SPELLS + "/img/spell/" + spell1_img + "' width='24' height='24' title='" + spell1_name +"'>" +
 						   "<img src='" + CDN_URL + "/" + VER_SN_SPELLS + "/img/spell/" + spell2_img + "' width='24' height='24' title='" + spell2_name +"'>" +
 						   " " + (game_data[i].win ? "Win" : "Lose");
-
+				
 //				target.appendChild(newTag);
 			}
-
+			
 			// うどん
 			$("#udon").children().remove();
-
+			
 			target = document.getElementById("udon");
 			newTag = document.createElement("recommend_udon");
-
+			
 			var udon_id = GetRecommendUdon(game_data);
 console.log("udon_id : " + udon_id);
-
-//			newTag.innerHTML = "<br />" + "今の貴方におすすめのうどんはこちら";
-
+			
+			newTag.innerHTML = "<br /><h1>" + "今の貴方におすすめのうどんはこちら</h1>";
+			
 			target.appendChild(newTag);
 		},
 		error: function (XMLHttpRequest, textStatus, errorThrown)
@@ -380,17 +375,17 @@ function SetGameData(data)
 	this.gamesubType = data.subType;
 	this.win = data.stats.win; // 勝敗
 	this.timePlayed = data.stats.timePlayed; // プレイ時間(秒)
-
+	
 	this.championsKilled = data.stats.championsKilled; // チャンピオンキル数
 	this.assists = data.stats.assists; // アシスト数
 	this.numDeaths = data.stats.numDeaths; // デス数
 	this.killingSprees = data.stats.killingSprees; // 連続キル回数
 	this.largestKillingSpree = data.stats.largestKillingSpree; // 最大連続キル数
 	this.largestMultiKill = data.stats.largestMultiKill; // 最大マルチキル数
-
+	
 	this.minionsKilled = data.stats.minionsKilled; // ミニオンキル数
 	this.turretsKilled = data.stats.turretsKilled; // 破壊タレット数
-
+	
 	this.goldEarned = data.stats.goldEarned; // 取得ゴールド量
 	this.goldSpent = data.stats.goldSpent; // 使用ゴールド量
 	// 与えたダメージ
@@ -402,7 +397,7 @@ function SetGameData(data)
 	this.trueDamageDealtPlayer = data.stats.trueDamageDealtPlayer;
 	this.totalTimeCrowdControlDealt = data.stats.totalTimeCrowdControlDealt;
 	this.largestCriticalStrike = data.stats.largestCriticalStrike || 0; // 最大クリティカルダメージ
-
+	
 	this.totalDamageDealt = data.stats.totalDamageDealt; // 与えたダメージ量(全ダメージ)
 	this.totalDamageDealtToBuildings = data.stats.totalDamageDealtToBuildings;
 	this.totalDamageDealtToChampions = data.stats.totalDamageDealtToChampions;
@@ -418,9 +413,12 @@ function SetGameData(data)
 
 function GetRecommendUdon(data)
 {
+	console.log("data : ");
+	console.log(data);
+	
 	var udon_id = 0;
 	var earnestness = 0.0; // 本気度
-
+	
 	var total_game_num = 0; // 試合数
 	var total_win = 0; // 勝利数
 	var total_kill = 0;
@@ -431,31 +429,34 @@ function GetRecommendUdon(data)
 	var total_turret_kill = 0;
 	var total_damage_dealt = 0;
 	var total_damage_taken = 0;
-
+	
 	var kda = 0.00;
 	var win_rate = 0;
 	var play_time = 0;
 	
 	for( var i = 0 ; i < data.length ; ++i )
 	{
-		total_win += data.stats.win ? 1 : 0;
-		total_kill += data.stats.championsKilled;
-		total_assists += data.stats.assists;
-		total_dead += data.stats.numDeaths;
-		total_killingSprees += data.stats.killingSprees;
-		total_play_time += data.stats.timePlayed;
-		total_turret_kill += data.stats.turretsKilled;
-		total_damage_dealt += data.totalDamageDealt;
-		total_damage_taken += data.totalDamageTaken;
-
-		switch( data.gameMode )
+		total_win += data[i].win ? 1 : 0;
+		total_kill += data[i].championsKilled;
+		total_assists += data[i].assists;
+		total_dead += data[i].numDeaths;
+		total_killingSprees += data[i].killingSprees;
+		total_play_time += data[i].timePlayed;
+		total_turret_kill += data[i].turretsKilled;
+		total_damage_dealt += data[i].totalDamageDealt;
+		total_damage_taken += data[i].totalDamageTaken;
+		
+		console.log("gameMode : " + data[i].gameMode );
+		console.log("gamesubType : " + data[i].gamesubType );
+		
+		switch( data[i].gameMode )
 		{
 			case "CLASSIC": // サモリフ
-				if( data.gamesubType === "NORMAL" )
+				if( data[i].gamesubType === "NORMAL" )
 				{
 					earnestness += EARNESTNESS_SN_NORMAL;
 				}
-				else if( data.gamesubType === "RANKED_SOLO_5x5" )
+				else if( data[i].gamesubType === "RANKED_SOLO_5x5" )
 				{
 					earnestness += EARNESTNESS_SN_RANKE_SOLO;
 				}
@@ -465,15 +466,38 @@ function GetRecommendUdon(data)
 				break;
 		}
 	}
-
+	
 	total_game_num = data.length;
-
+	
 	// KDA
 	kda = ( total_kill + total_assists ) / total_dead;
 	// Win Rate
 	win_rate = ( total_win / total_game_num ) * 100;
 	// Play time
 	play_time = total_play_time - ( total_game_num * 1200 );
+	
+	console.log("total_game_num : " + total_game_num);
+	console.log("kda : " + kda);
+	console.log("win_rate : " + win_rate);
+	console.log("play_time : " + play_time);
+	console.log("total_win : " + total_win);
+	console.log("total_kill : " + total_kill);
+	console.log("total_assists : " + total_assists);
+	console.log("total_dead : " + total_dead);
+	console.log("total_killingSprees : " + total_killingSprees);
+	console.log("total_play_time : " + total_play_time);
+	console.log("total_turret_kill : " + total_turret_kill);
+	console.log("total_damage_dealt : " + total_damage_dealt);
+	console.log("total_damage_taken : " + total_damage_taken);
+	
+	// 調子
+	var condition = 0;
+	condition = condition + ( kda - 3.0 ) * ( earnestness - ( EARNESTNESS_SN_ARAM * total_game_num ) );
+	condition = condition + ( total_turret_kill * ( ( earnestness - ( EARNESTNESS_SN_ARAM * total_game_num ) * 0.1 ) );
+	condition = condition + ( (total_damage_dealt / 10000 ) * ( ( earnestness - ( EARNESTNESS_SN_ARAM * total_game_num ) ) * 0.2 ) );
+	condition = condition + ( (total_damage_taken / 10000 ) * ( ( earnestness - ( EARNESTNESS_SN_ARAM * total_game_num ) ) * 0.2 ) );
+	// 疲労
+	// 空腹
 
 	return udon_id;
 }
@@ -485,6 +509,7 @@ function Test()
 		url: './php/main.php',
 		type: 'GET',
 		dataType: 'json',
+		scriptCharset: 'utf-8',
 		data: { func:"GetVersion" },
 
 		success: function (json)
@@ -495,7 +520,9 @@ function Test()
 		},
 		error: function (XMLHttpRequest, textStatus, errorThrown)
 		{
-			errorDlg("Test");
+			console.log(XMLHttpRequest);
+			console.log(textStatus);
+			console.log(errorThrown);
 		}
 	});
 }
