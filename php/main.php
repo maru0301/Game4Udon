@@ -8,16 +8,8 @@ class RiotApi
 	
 	private function GetJson( $url )
 	{
-		$proxy = array(
-			"http" => array(
-					"proxy" => "proxy2.hq.scei.sony.co.jp:10080",
-					'request_fulluri' => true,
-				),
-		);
-		
-		$proxy_context = stream_context_create($proxy);
 		$master_url = $url . $this->api_key;
-		$json = file_get_contents($master_url, false, $proxy_context);
+		$json = file_get_contents($master_url);
 		$json = mb_convert_encoding($json, 'UTF8', 'ASCII,JIS,UTF-8,EUC-JP,SJIS-WIN');
 		
 		return $json;
