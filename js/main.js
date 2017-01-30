@@ -17,6 +17,8 @@ var EARNESTNESS_SN_NORMAL = 1.0;
 var EARNESTNESS_SN_RANKE_SOLO = 2.0;
 var EARNESTNESS_SN_ARAM = 0.5;
 
+var GAME_MIN_TIME_SEC = 1200; //  20(min)
+
 ///////////////////////////////////////
 var JSON_DATA_CHAMP_IMG 	= {};
 var JSON_DATA_SN_SPELLS_IMG 	= {};
@@ -48,7 +50,7 @@ function summonerLookUp()
 {
 //	console.log("summonerLookUp");
 	
-	$.getScript('https://sites.google.com/site/tmaruprofile/global.js',function(){
+//	$.getScript('https://sites.google.com/site/tmaruprofile/global.js',function(){
 		var SUMMONER_NAME = "";
 		SUMMONER_NAME = $("#summonerName").val();
 		
@@ -157,7 +159,7 @@ function summonerLookUp()
 		{
 			errorDlg(ERROR_ID_SNUM_NAME_ERROR)
 		}
-	});
+//	});
 }
 
 /////////////////////////////////////////////////
@@ -185,7 +187,7 @@ function ShowMastery()
 {
 	$.ajax(
 	{
-		url: 'https://global.api.pvp.net/api/lol/static-data/jp/v1.2/mastery?locale=ja_JP&masteryListData=image&api_key=' + API_KEY,
+//		url: 'https://global.api.pvp.net/api/lol/static-data/jp/v1.2/mastery?locale=ja_JP&masteryListData=image&api_key=' + API_KEY,
 		type: 'GET',
 		dataType: 'json',
 		data: {},
@@ -251,10 +253,10 @@ function GetRecentMatchHistory()
 {
 	$.ajax(
 	{
-		url: 'https://jp.api.pvp.net/api/lol/jp/v1.3/game/by-summoner/' + SUM_ID + "/recent?api_key=" + API_KEY,
+		url: './php/main.php',
 		type: 'GET',
 		dataType: 'json',
-		data: {},
+		data: { func:"GetRecentMatchHistory", summonerID:SUM_ID, country_id1:COUNTRY_ID2.toLowerCase(), country_id2:COUNTRY_ID2.toUpperCase() },
 		
 		success: function (json)
 		{
@@ -361,6 +363,8 @@ console.log("udon_id : " + udon_id);
 		error: function (XMLHttpRequest, textStatus, errorThrown)
 		{
 			console.log("GetRecentMatchHistory");
+			console.log(XMLHttpRequest);
+			console.log(textStatus);
 		}
 	});
 }
@@ -384,7 +388,7 @@ function SetGameData(data)
 	this.largestMultiKill = data.stats.largestMultiKill; // 最大マルチキル数
 	
 	this.minionsKilled = data.stats.minionsKilled; // ミニオンキル数
-	this.turretsKilled = data.stats.turretsKilled; // 破壊タレット数
+	this.turretsKilled = data.stats.turretsKilled || 0; // 破壊タレット数
 	
 	this.goldEarned = data.stats.goldEarned; // 取得ゴールド量
 	this.goldSpent = data.stats.goldSpent; // 使用ゴールド量
@@ -474,7 +478,7 @@ function GetRecommendUdon(data)
 	// Win Rate
 	win_rate = ( total_win / total_game_num ) * 100;
 	// Play time
-	play_time = total_play_time - ( total_game_num * 1200 );
+	play_time = total_play_time - ( total_game_num * GAME_MIN_TIME_SEC );
 	
 	console.log("total_game_num : " + total_game_num);
 	console.log("kda : " + kda);
@@ -493,12 +497,16 @@ function GetRecommendUdon(data)
 	// 調子
 	var condition = 0;
 	condition = condition + ( kda - 3.0 ) * ( earnestness - ( EARNESTNESS_SN_ARAM * total_game_num ) );
-	condition = condition + ( total_turret_kill * ( ( earnestness - ( EARNESTNESS_SN_ARAM * total_game_num ) * 0.1 ) );
+	condition = condition + ( total_turret_kill * ( ( earnestness - ( EARNESTNESS_SN_ARAM * total_game_num ) * 0.1 ) ) );
 	condition = condition + ( (total_damage_dealt / 10000 ) * ( ( earnestness - ( EARNESTNESS_SN_ARAM * total_game_num ) ) * 0.2 ) );
 	condition = condition + ( (total_damage_taken / 10000 ) * ( ( earnestness - ( EARNESTNESS_SN_ARAM * total_game_num ) ) * 0.2 ) );
 	// 疲労
+	var fatigue = 0;
+	fatigue = fatigue + ( earnestness - ( EARNESTNESS_SN_ARAM * total_game_num ) );
+	fatigue = fatigue + ( play_time * earnestness );
+	
 	// 空腹
-
+	
 	return udon_id;
 }
 

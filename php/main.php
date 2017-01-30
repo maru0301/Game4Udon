@@ -50,6 +50,17 @@ class RiotApi
 		
 		return $json;
 	}
+	
+	public function GetRecentMatchHistory()
+	{
+		$sn_id = $_GET['summonerID'];
+		$contry_id1 = $_GET['country_id1'];
+		$contry_id2 = $_GET['country_id2'];
+		
+		$json = $this->GetJson('https://' . $contry_id1 . '.api.pvp.net/api/lol/' . $contry_id2 . '/v1.3/game/by-summoner/' . $sn_id . '/recent?api_key=');
+		
+		return $json;
+	}
 }
 
 //-------------------------------------------------
@@ -62,6 +73,7 @@ $func_tbl = array(
 			"GetSummonerByName" => "GetSummonerByName",
 			"GetChampionImage" => "GetChampionImage",
 			"GetSummonerSpells" => "GetSummonerSpells",
+			"GetRecentMatchHistory" => "GetRecentMatchHistory",
 );
 
 //-------------------------------------------------
