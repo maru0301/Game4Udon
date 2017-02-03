@@ -22,6 +22,7 @@ var GAME_MIN_TIME_SEC = 1200; //  20(min)
 ///////////////////////////////////////
 var JSON_DATA_CHAMP_IMG 	= {};
 var JSON_DATA_SN_SPELLS_IMG 	= {};
+var JSON_DATA_UDON_LIST = {};
 
 ///////////////////////////////////////
 var GAME_MODE_MESS = {
@@ -43,6 +44,7 @@ var ERROR_ID_VERSION_GET_ERROR 		= "バージョン情報が取得出来ませ�
 var ERROR_ID_SNUM_GET_ERROR 		= "サモナーネーム情報が取得出来ませんでした";
 var ERROR_ID_CHAMPION_GET_ERROR 	= "チャンピオン情報が取得出来ませんでした";
 var ERROR_ID_SN_SPELLS_GET_ERROR 	= "サモナースペル情報が取得出来ませんでした";
+var ERROR_ID_UDON_LIST_GET_ERROR 	= "うどん情報が取得出来ませんでした";
 
 ////////////////////////////////////////////////////////////////////////////////////
 //
@@ -61,6 +63,7 @@ function summonerLookUp()
 				{ error_id: ERROR_ID_SNUM_GET_ERROR,		url: './php/main.php', data: { func:"GetSummonerByName", summonerName:SUMMONER_NAME, country_id1:COUNTRY_ID2.toLowerCase(), country_id2:COUNTRY_ID2.toUpperCase() },  }, // サモナーID
 				{ error_id: ERROR_ID_CHAMPION_GET_ERROR,	url: './php/main.php', data: { func:"GetChampionImage" },  }, // champion Img
 				{ error_id: ERROR_ID_SN_SPELLS_GET_ERROR,	url: './php/main.php', data: { func:"GetSummonerSpells" },  }, // summoner spell Img
+				{ error_id: ERROR_ID_UDON_LIST_GET_ERROR,	url: './data/json/udon_list.json', data: {},  },
 			];
 			
 			var jqXHRList = [];
@@ -101,6 +104,7 @@ function summonerLookUp()
 				var summonerJson = json[1];
 				var champImgJson = json[2];
 				var spellsImgJson = json[3];
+				var udonListJson = json[4];
 				
 //				console.log(verJson);
 //				console.log(summonerJson);
@@ -130,7 +134,8 @@ function summonerLookUp()
 				// Jsonをキャッシュ
 				JSON_DATA_CHAMP_IMG = champImgJson;
 				JSON_DATA_SN_SPELLS_IMG = spellsImgJson;
-				
+				JSON_DATA_UDON_LIST = udonListJson;
+			
 				///////////////////////////////////////////////////////////
 				// 表示
 				///////////////////////////////////////////////////////////
@@ -348,17 +353,7 @@ function GetRecentMatchHistory()
 			}
 			
 			// うどん
-			$("#udon").children().remove();
-			
-			target = document.getElementById("udon");
-			newTag = document.createElement("recommend_udon");
-			
-			var udon_id = GetRecommendUdon(game_data);
-console.log("udon_id : " + udon_id);
-			
-			newTag.innerHTML = "<br /><h1>" + "今の貴方におすすめのうどんはこちら</h1>";
-			
-			target.appendChild(newTag);
+			ShowUdon(game_data);
 		},
 		error: function (XMLHttpRequest, textStatus, errorThrown)
 		{
@@ -417,8 +412,8 @@ function SetGameData(data)
 
 function GetRecommendUdon(data)
 {
-	console.log("data : ");
-	console.log(data);
+//	console.log("data : ");
+//	console.log(data);
 	
 	var udon_id = 0;
 	var earnestness = 0.0; // 本気度
@@ -480,19 +475,19 @@ function GetRecommendUdon(data)
 	// Play time
 	play_time = total_play_time - ( total_game_num * GAME_MIN_TIME_SEC );
 	
-	console.log("total_game_num : " + total_game_num);
-	console.log("kda : " + kda);
-	console.log("win_rate : " + win_rate);
-	console.log("play_time : " + play_time);
-	console.log("total_win : " + total_win);
-	console.log("total_kill : " + total_kill);
-	console.log("total_assists : " + total_assists);
-	console.log("total_dead : " + total_dead);
-	console.log("total_killingSprees : " + total_killingSprees);
-	console.log("total_play_time : " + total_play_time);
-	console.log("total_turret_kill : " + total_turret_kill);
-	console.log("total_damage_dealt : " + total_damage_dealt);
-	console.log("total_damage_taken : " + total_damage_taken);
+//	console.log("total_game_num : " + total_game_num);
+//	console.log("kda : " + kda);
+//	console.log("win_rate : " + win_rate);
+//	console.log("play_time : " + play_time);
+//	console.log("total_win : " + total_win);
+//	console.log("total_kill : " + total_kill);
+//	console.log("total_assists : " + total_assists);
+//	console.log("total_dead : " + total_dead);
+//	console.log("total_killingSprees : " + total_killingSprees);
+//	console.log("total_play_time : " + total_play_time);
+//	console.log("total_turret_kill : " + total_turret_kill);
+//	console.log("total_damage_dealt : " + total_damage_dealt);
+//	console.log("total_damage_taken : " + total_damage_taken);
 	
 	// 調子
 	var condition = 0;
@@ -506,8 +501,33 @@ function GetRecommendUdon(data)
 	fatigue = fatigue + ( play_time * earnestness );
 	
 	// 空腹
+	var hungry = 0;
+	hungry = hungry + ( play_time * fatigue );
 	
-	return udon_id;
+	console.log(JSON_DATA_UDON_LIST);
+	console.log(JSON_DATA_UDON_LIST[0]);
+	
+	console.log("condition : " + condition);
+	console.log("fatigue : " + fatigue);
+	console.log("hungry : " + hungry);
+	
+	return JSON_DATA_UDON_LIST[udon_id];
+}
+
+function ShowUdon(game_data)
+{
+	$("#udon").children().remove();
+	
+	var target = document.getElementById("udon");
+	var newTag = document.createElement("recommend_udon");
+	
+	var udon = GetRecommendUdon(game_data);
+console.log(udon);
+	newTag.innerHTML = "<br /><h1>" + "今の貴方におすすめのうどんはこちら</h1>" +
+			"<img src='./data/img/"+ udon.fileName +"' width='24' height='24' title='" + udon.name +"' class='udon_img'/>" + "<br>";// +
+			
+	
+	target.appendChild(newTag);
 }
 
 function Test()
