@@ -167,3 +167,9 @@ footer {
 footer a {
 	margin:0px 5px;
 }
+
+.udon_img {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
