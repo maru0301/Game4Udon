@@ -1,9 +1,72 @@
 {
 	"0": {
 		"fileName" : "udon_000.jpg",
-		"name" : "天ぷらうどん",
+		"name" : "ぶっかけ天ぷらうどん",
 		"info" : "あああああ",
 		"param" : {
+			"condition" : [ 0.0, 10.0 ],
+			"fatigue" : [ 0.0, 10.0 ],
+			"hungry" : [ 0.0, 10.0 ]
+		}
+	},
+	"1": {
+		"fileName" : "udon_001.jpg",
+		"name" : "ぶっかけおろしうどん",
+		"info" : "あああああ",
+		"param" : {
+			"condition" : [ 0.0, 10.0 ],
+			"fatigue" : [ 0.0, 10.0 ],
+			"hungry" : [ 0.0, 10.0 ]
+		}
+	},
+	"2": {
+		"fileName" : "udon_002.jpg",
+		"name" : "しっぽくうどん",
+		"info" : "あああああ",
+		"param" : {
+			"condition" : [ 0.0, 10.0 ],
+			"fatigue" : [ 0.0, 10.0 ],
+			"hungry" : [ 0.0, 10.0 ]
+		}
+	},
+	"3": {
+		"fileName" : "udon_003.jpg",
+		"name" : "かけうどん",
+		"info" : "あああああ",
+		"param" : {
+			"condition" : [ 0.0, 10.0 ],
+			"fatigue" : [ 0.0, 10.0 ],
+			"hungry" : [ 0.0, 10.0 ]
+		}
+	},
+	"4": {
+		"fileName" : "udon_004.jpg",
+		"name" : "肉うどん",
+		"info" : "あああああ",
+		"param" : {
+			"condition" : [ 0.0, 10.0 ],
+			"fatigue" : [ 0.0, 10.0 ],
+			"hungry" : [ 0.0, 10.0 ]
+		}
+	},
+	"5": {
+		"fileName" : "udon_005.jpg",
+		"name" : "鶏天うどん",
+		"info" : "あああああ",
+		"param" : {
+			"condition" : [ 0.0, 10.0 ],
+			"fatigue" : [ 0.0, 10.0 ],
+			"hungry" : [ 0.0, 10.0 ]
+		}
+	},
+	"6": {
+		"fileName" : "udon_006.jpg",
+		"name" : "カレーうどん",
+		"info" : "あああああ",
+		"param" : {
+			"condition" : [ 0.0, 10.0 ],
+			"fatigue" : [ 0.0, 10.0 ],
+			"hungry" : [ 0.0, 10.0 ]
 		}
 	}
 }
