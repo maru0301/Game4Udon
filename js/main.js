@@ -28,15 +28,15 @@ var JSON_DATA_UDON_LIST = {};
 var GAME_MODE_MESS = {
 	"ARAM" :	[
 				{ "type" : "MATCHED_GAME",	"sub_type" : "ARAM_UNRANKED_5x5",	"mess" : "アラーム" },
-				{ "type" : "CUSTOM_GAME", 	"sub_type" : "ARAM_UNRANKED_5x5",	"mess" : "アラーム(カスタム)" },
+				{ "type" : "CUSTOM_GAME", 	"sub_type" : "NONE",			"mess" : "アラーム(カスタム)" },
 			],
 	"CLASSIC" :	[
 				{ "type" : "MATCHED_GAME", 	"sub_type" : "RANKED_SOLO_5x5", 	"mess" : "ランクゲーム" },
 				{ "type" : "MATCHED_GAME", 	"sub_type" : "NORMAL", 			"mess" : "サモナーズリフト" },
-				{ "type" : "CUSTOM_GAME", 	"sub_type" : "NORMAL", 			"mess" : "サモナーズリフト(カスタム)" },
+				{ "type" : "CUSTOM_GAME", 	"sub_type" : "NONE", 			"mess" : "サモナーズリフト(カスタム)" },
 			],
 	"URF"	:	[
-				{ "type" : "MATCHED_GAME", 	"sub_type" : "URF", 	"mess" : "URF" },
+				{ "type" : "MATCHED_GAME", 	"sub_type" : "URF", 			"mess" : "URF" },
 				{ "type" : "CUSTOM_GAME", 	"sub_type" : "URF", 			"mess" : "URF(カスタム)" },
 			],
 };
@@ -63,7 +63,6 @@ function summonerLookUp()
 	
 	if(SUMMONER_NAME !== "")
 	{
-		console.log("SN : "+SUMMONER_NAME);
 		var SUMMONER_NAME_URL = SUMMONER_NAME.replace(" ", "%20");
 		SUMMONER_NAME_URL = SUMMONER_NAME_URL.replace("　", "%20");
 		var request = [
@@ -149,7 +148,7 @@ function summonerLookUp()
 	}
 	else
 	{
-		errorDlg(ERROR_ID_SNUM_NAME_ERROR)
+		errorDlg(ERROR_ID_SNUM_NAME_ERROR);
 	}
 }
 
@@ -203,6 +202,10 @@ function GetRecentMatchHistory()
 				gameType = json.games[i].gameType;
 				gameSubType = json.games[i].subType;
 				
+				console.log("gameMode:"+gameMode);
+				console.log("gameType:"+gameType);
+				console.log("gameSubType:"+gameSubType);
+				
 				// ゲームモード
 				for( var j = 0 ; j < GAME_MODE_MESS[game_data[i].gameMode].length ; ++j )
 				{
@@ -254,9 +257,9 @@ function GetRecentMatchHistory()
 				newTag.className = winlose;
 				
 				newTag.innerHTML = "<h1>" + gameModeMess + "</h1>" +
-						   winlose  + "<br>" +
-						   game_data[i].championsKilled + "/" + game_data[i].numDeaths + "/" + game_data[i].assists + "<br>" +
-						   "<img src='" + CDN_URL + "/" + VER_CHAMPION + "/img/champion/" + champ_img + "' width='48' height='48' title='" + champ_name +"'>" +
+						   "<b>" + winlose  + "</b>" + "<br>" +
+						   "<b>" + game_data[i].championsKilled + "/" + game_data[i].numDeaths + "/" + game_data[i].assists + "</b>" + "<br>" +
+						   "<img src='" + CDN_URL + "/" + VER_CHAMPION + "/img/champion/" + champ_img + "' width='64' height='64' title='" + champ_name +"'>" + "<br>" +
 						   "<img src='" + CDN_URL + "/" + VER_SN_SPELLS + "/img/spell/" + spell1_img + "' width='24' height='24' title='" + spell1_name +"'>" +
 						   "<img src='" + CDN_URL + "/" + VER_SN_SPELLS + "/img/spell/" + spell2_img + "' width='24' height='24' title='" + spell2_name +"'>";
 				
@@ -383,13 +386,13 @@ function GetRecommendUdon(data)
 	
 	// 調子
 	var condition = 0;
-
+	
 	condition = condition + ( win_rate === 0 ? 0.00001 : win_rate );
 	condition = condition + ( kda - 3.0 ) * ( earnestness );
 	condition = condition + ( total_turret_kill * ( earnestness ) * 0.001);
 	condition = condition + ( (total_damage_dealt / 10000 ) * ( earnestness ) * 0.01);
 	condition = condition + ( (total_damage_taken / 10000 ) * ( earnestness ) * 0.01);
-
+	
 	// 疲労
 	var fatigue = 0;
 	fatigue = fatigue + ( ( play_over_time / 200 ) * earnestness );
@@ -400,45 +403,46 @@ function GetRecommendUdon(data)
 	hungry = hungry + play_over_time/150;
 	hungry = hungry + ( fatigue / 10 );
 	
-var game_list = new Array();
+	/*
+	var game_list = new Array();
 
-for( var i = 0 ; i < data.length ; ++i )
-{
-	var mess = "";
-	switch( data[i].gameMode )
+	for( var i = 0 ; i < data.length ; ++i )
 	{
-		case "CLASSIC": // サモリフ
-			if( data[i].gamesubType === "NORMAL" )
-			{
-				mess = "ノーマル";
-			}
-			else if( data[i].gamesubType === "RANKED_SOLO_5x5" )
-			{
-				mess = "ランク";
-			}
-			else if( data[i].gameType == "CUSTOM_GAME" )
-			{
-				mess = "カスタム";
-			}
-			break;
-		case "ARAM": // アラーム
-			mess = "ARAM";
-			break;
-		case "URF" : // URF
-			mess =" URF";
-			break;
+		var mess = "";
+		switch( data[i].gameMode )
+		{
+			case "CLASSIC": // サモリフ
+				if( data[i].gamesubType === "NORMAL" )
+				{
+					mess = "ノーマル";
+				}
+				else if( data[i].gamesubType === "RANKED_SOLO_5x5" )
+				{
+					mess = "ランク";
+				}
+				else if( data[i].gameType == "CUSTOM_GAME" )
+				{
+					mess = "カスタム";
+				}
+				break;
+			case "ARAM": // アラーム
+				mess = "ARAM";
+				break;
+			case "URF" : // URF
+				mess =" URF";
+				break;
+		}
+		game_list.push(mess);
 	}
-	game_list.push(mess);
-}
-console.log("GameList :" + game_list);
-console.log("Win :" + total_win);
-console.log("Lose :" + (10 - total_win));
-console.log("play_time : " + play_over_time);
-console.log("本気度 :" + earnestness);
-console.log("調子 :"+condition);
-console.log("疲れ :"+fatigue);
-console.log("空腹 :"+hungry);
-	
+	console.log("GameList :" + game_list);
+	console.log("Win :" + total_win);
+	console.log("Lose :" + (10 - total_win));
+	console.log("play_time : " + play_over_time);
+	console.log("本気度 :" + earnestness);
+	console.log("調子 :"+condition);
+	console.log("疲れ :"+fatigue);
+	console.log("空腹 :"+hungry);
+	*/
 	// 時間
 	var date = new Date();
 	var hours = date.getHours();
@@ -474,11 +478,13 @@ console.log("空腹 :"+hungry);
 			save_diff = diff;
 			udon_id = key;
 		}
+		/*
 		console.log("name : " + JSON_DATA_UDON_LIST[key].name);
 		console.log("diff_condition : " + Math.abs(diff_condition - condition));
 		console.log("diff_fatigue : " + Math.abs(diff_fatigue - fatigue));
 		console.log("diff_hungry : " + Math.abs(diff_hungry - hungry));
 		console.log("diff : " + diff);
+		*/
 	}
 	
 	return JSON_DATA_UDON_LIST[udon_id];

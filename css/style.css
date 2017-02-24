@@ -25,6 +25,7 @@ video {
 h1, h2, h3, h4, h5, h6 {
 	font-family: 'MyFont';
 	font-weight:lighter;
+	font-size:24px;
 }
 
 a:link, a:visited {
@@ -48,7 +49,7 @@ header, nav, section, footer {
 	background-color: #fff;
 	margin:5px;
 	padding: 0 20px 10px 20px;
-	font-size: 12pt;
+	font-size: 24pt;
 	color: #000;
 	text-align: left;
 }
@@ -178,12 +179,12 @@ footer a {
 }
 
 .udon_name {
-	font-size:2.4em;
+	font-size:32px;
 	text-align: center;
 }
 
 .udon_info {
-	font-size:1.8em;
+	font-size:20px;
 	text-align: center;
 }
 
@@ -207,4 +208,13 @@ section section {
 	border-radius:20px;
 	font-family: MyFont;
 	font-size:30px;
+}
+
+input {
+	text-align: center;
+}
+
+section.about {
+	font-family:"Hiragino Kaku Gothic Pro",  Meiryo, sans-serif;
+	font-size:16px;
 }

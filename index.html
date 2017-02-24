@@ -3,7 +3,6 @@
 	<head>
 		<meta charset="utf-8">
 		<title>Game4Udon</title>
-
 		<link rel="stylesheet" type="text/css" href="./css/rest.css" />
 		<link href="./css/jquery.mb.YTPlayer.min.css" media="all" rel="stylesheet" type="text/css">
 		<link rel="stylesheet" type="text/css" href="./css/style.css" />
@@ -13,24 +12,32 @@
 	</head>
 	<body>
 		<main>
-			<header>
-				<h1>げーむふぉーうどん</h1>
-			</header>
-			<section>
-				<article>
+			<article>
+				<header>
+					<h1>げーむふぉーうどん</h1>
+				</header>
+			</article>
+			<article>
+				<section>
 					<h1>サモナーネーム<br>
-					<input id="summonerName" /><br>
+					<input id="summonerName"/><br>
 					</h1>
 					<br>
 					<input type="submit" value="うどん注文" class="udon_button" onclick="summonerLookUp();" /><br>
-				</article>
-				<article>
 					<span id="udon"></span>
-				</article>
-				<article>
+				</section>
+				<section>
 					<h1>マッチ</h1>
 					<span id="match"></span>
-				</article>
+				</section>
+			</article>
+			<section class="about">
+					<h1>サイトについて</h1>
+					<div>
+						その時大体おすすめなうどんが出てきます<br>
+						掲載OKなうどんの写真絶賛募集中です<br>
+						提供頂ける方はツイッター(<a href="https://twitter.com/maru0301">maru0301</a>)までお願いします
+					</div>
 			</section>
 			<div id="bg"></div>
 			<script type="text/javascript" src="./js/video.js"></script>
