@@ -202,10 +202,6 @@ function GetRecentMatchHistory()
 				gameType = json.games[i].gameType;
 				gameSubType = json.games[i].subType;
 				
-				console.log("gameMode:"+gameMode);
-				console.log("gameType:"+gameType);
-				console.log("gameSubType:"+gameSubType);
-				
 				// ゲームモード
 				for( var j = 0 ; j < GAME_MODE_MESS[game_data[i].gameMode].length ; ++j )
 				{
