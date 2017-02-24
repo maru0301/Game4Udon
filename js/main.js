@@ -14,8 +14,8 @@ var CDN_URL = "";
 
 // 本気度
 var EARNESTNESS_SN_NORMAL = 1.0;
-var EARNESTNESS_SN_RANKE_SOLO = 2.0;
-var EARNESTNESS_SN_ARAM = 0.5;
+var EARNESTNESS_SN_RANKE_SOLO = 1.00002;
+var EARNESTNESS_SN_ARAM = 0.9;
 
 var GAME_MIN_TIME_SEC = 1200; //  20(min)
 
@@ -28,11 +28,16 @@ var JSON_DATA_UDON_LIST = {};
 var GAME_MODE_MESS = {
 	"ARAM" :	[
 				{ "type" : "MATCHED_GAME",	"sub_type" : "ARAM_UNRANKED_5x5",	"mess" : "アラーム" },
-				{ "type" : "CUSTOM_GAME", 	"sub_type" : "ARAM_UNRANKED_5x5",	"mess" : "カスタム(アラーム)" },
+				{ "type" : "CUSTOM_GAME", 	"sub_type" : "ARAM_UNRANKED_5x5",	"mess" : "アラーム(カスタム)" },
 			],
 	"CLASSIC" :	[
 				{ "type" : "MATCHED_GAME", 	"sub_type" : "RANKED_SOLO_5x5", 	"mess" : "ランクゲーム" },
-				{ "type" : "MATCHED_GAME", 	"sub_type" : "NORMAL", 			"mess" : "ノーマルゲーム" },
+				{ "type" : "MATCHED_GAME", 	"sub_type" : "NORMAL", 			"mess" : "サモナーズリフト" },
+				{ "type" : "CUSTOM_GAME", 	"sub_type" : "NORMAL", 			"mess" : "サモナーズリフト(カスタム)" },
+			],
+	"URF"	:	[
+				{ "type" : "MATCHED_GAME", 	"sub_type" : "URF", 	"mess" : "URF" },
+				{ "type" : "CUSTOM_GAME", 	"sub_type" : "URF", 			"mess" : "URF(カスタム)" },
 			],
 };
 
@@ -50,14 +55,20 @@ var ERROR_ID_UDON_LIST_GET_ERROR 	= "うどん情報が取得出来ませんで�
 //
 function summonerLookUp()
 {
+	$("#udon").children().remove();
+	$("#match").children().remove();
+	
 	var SUMMONER_NAME = "";
 	SUMMONER_NAME = $("#summonerName").val();
 	
 	if(SUMMONER_NAME !== "")
 	{
+		console.log("SN : "+SUMMONER_NAME);
+		var SUMMONER_NAME_URL = SUMMONER_NAME.replace(" ", "%20");
+		SUMMONER_NAME_URL = SUMMONER_NAME_URL.replace("　", "%20");
 		var request = [
 			{ error_id: ERROR_ID_VERSION_GET_ERROR,		url: './php/main.php', data: { func:"GetVersion" },  }, // Version
-			{ error_id: ERROR_ID_SNUM_GET_ERROR,		url: './php/main.php', data: { func:"GetSummonerByName", summonerName:SUMMONER_NAME, country_id1:COUNTRY_ID2.toLowerCase(), country_id2:COUNTRY_ID2.toUpperCase() },  }, // サモナーID
+			{ error_id: ERROR_ID_SNUM_GET_ERROR,		url: './php/main.php', data: { func:"GetSummonerByName", summonerName:SUMMONER_NAME_URL, country_id1:COUNTRY_ID2.toLowerCase(), country_id2:COUNTRY_ID2.toUpperCase() },  }, // サモナーID
 			{ error_id: ERROR_ID_CHAMPION_GET_ERROR,	url: './php/main.php', data: { func:"GetChampionImage" },  }, // champion Img
 			{ error_id: ERROR_ID_SN_SPELLS_GET_ERROR,	url: './php/main.php', data: { func:"GetSummonerSpells" },  }, // summoner spell Img
 			{ error_id: ERROR_ID_UDON_LIST_GET_ERROR,	url: './data/json/udon_list.json', data: {},  },
@@ -122,16 +133,14 @@ function summonerLookUp()
 			// 表示
 			///////////////////////////////////////////////////////////
 			
-			ShowSummonerInfo(summonerJson, SUMMONER_NAME_NOSPACES); // サモナー情報表示
-			
 			GetRecentMatchHistory(); // 試合情報表示
 		});
 		
-		$.when.apply(null, jqXHRList).fail(function ()
+		$.when.apply(null, jqXHRList).fail(function (status,status2,status3)
 		{
 			for( var i = 0 ; i < jqXHRList.length ; ++i )
 			{
-				if( jqXHRList[i].statusText === "error" )
+				if( jqXHRList[i].statusText === "error" || ( jqXHRList[i].responseText !== undefined && jqXHRList[i].responseJSON === undefined ) )
 				{
 					errorDlg( request[i].error_id );
 				}
@@ -154,46 +163,6 @@ function errorDlg(msg)
 
 /////////////////////////////////////////////////
 //
-
-function ShowSummonerInfo(userDataJson, summonerName)
-{
-	var summonerLevel = userDataJson[summonerName].summonerLevel;
-	var summonerID = userDataJson[summonerName].id;
-	
-	document.getElementById("sLevel").innerHTML = summonerLevel;
-//	document.getElementById("sID").innerHTML = summonerID;
-}
-
-function ShowMastery()
-{
-	$.ajax(
-	{
-		type: 'GET',
-		dataType: 'json',
-		data: {},
-		
-		success: function (json)
-		{
-			var target = document.getElementById("mastery");
-			var newTag;
-			
-			for( var i in json.data )
-			{
-				newTag = document.createElement("mastery_"+i);
-				newTag.innerHTML = "<br />" + json.data[i].name +
-						   "<br />" + "<img src='" + CDN_URL + "/" + VER_MASTERY + "/img/mastery/" + i + ".png' width='48' height='48' title='" + json.data[i].name +"'>" +
-						   "<br />" + json.data[i].description +
-						   "<br />";
-				
-				target.appendChild(newTag);
-			}
-		},
-		error: function (XMLHttpRequest, textStatus, errorThrown)
-		{
-			errorDlg(ERROR_ID_MASTERY_LISTDATA_ERROR);
-		}
-	});
-}
 
 function GetRecentMatchHistory()
 {
@@ -279,26 +248,17 @@ function GetRecentMatchHistory()
 						break;
 				}
 				
-/*
-				newTag = document.createElement("match_"+i);
-				
-				newTag.innerHTML = "<br />" + gameModeMess +
-						   "<br />" + "<img src='" + CDN_URL + "/" + VER_CHAMPION + "/img/champion/" + champ_img + "' width='48' height='48' title='" + champ_name +"'>" +
-						   "<img src='" + CDN_URL + "/" + VER_SN_SPELLS + "/img/spell/" + spell1_img + "' width='24' height='24' title='" + spell1_name +"'>" +
-						   "<img src='" + CDN_URL + "/" + VER_SN_SPELLS + "/img/spell/" + spell2_img + "' width='24' height='24' title='" + spell2_name +"'>" +
-						   " " + (game_data[i].win ? "Win" : "Lose");
-*/
 				var winlose = game_data[i].win ? "Win" : "Lose";
 				
 				newTag = document.createElement("section");
 				newTag.className = winlose;
 				
 				newTag.innerHTML = "<h1>" + gameModeMess + "</h1>" +
+						   winlose  + "<br>" +
+						   game_data[i].championsKilled + "/" + game_data[i].numDeaths + "/" + game_data[i].assists + "<br>" +
 						   "<img src='" + CDN_URL + "/" + VER_CHAMPION + "/img/champion/" + champ_img + "' width='48' height='48' title='" + champ_name +"'>" +
 						   "<img src='" + CDN_URL + "/" + VER_SN_SPELLS + "/img/spell/" + spell1_img + "' width='24' height='24' title='" + spell1_name +"'>" +
-						   "<img src='" + CDN_URL + "/" + VER_SN_SPELLS + "/img/spell/" + spell2_img + "' width='24' height='24' title='" + spell2_name +"'>" +
-						   "&nbsp;&nbsp;&nbsp;" + game_data[i].championsKilled + "/" + game_data[i].numDeaths + "/" + game_data[i].assists +
-						   "&nbsp;&nbsp;&nbsp;" + winlose;
+						   "<img src='" + CDN_URL + "/" + VER_SN_SPELLS + "/img/spell/" + spell2_img + "' width='24' height='24' title='" + spell2_name +"'>";
 				
 				target.appendChild(newTag);
 			}
@@ -379,7 +339,7 @@ function GetRecommendUdon(data)
 	
 	var kda = 0.00;
 	var win_rate = 0;
-	var play_time = 0;
+	var play_over_time = 0;
 	
 	for( var i = 0 ; i < data.length ; ++i )
 	{
@@ -406,6 +366,7 @@ function GetRecommendUdon(data)
 				}
 				break;
 			case "ARAM": // アラーム
+			case "URF" : // URF
 				earnestness += EARNESTNESS_SN_ARAM;
 				break;
 		}
@@ -418,22 +379,83 @@ function GetRecommendUdon(data)
 	// Win Rate
 	win_rate = ( total_win / total_game_num ) * 100;
 	// Play time
-	play_time = total_play_time - ( total_game_num * GAME_MIN_TIME_SEC );
+	play_over_time = total_play_time - ( total_game_num * GAME_MIN_TIME_SEC );
 	
 	// 調子
 	var condition = 0;
-	condition = condition + ( kda - 3.0 ) * ( earnestness - ( EARNESTNESS_SN_ARAM * total_game_num ) );
-	condition = condition + ( total_turret_kill * ( ( earnestness - ( EARNESTNESS_SN_ARAM * total_game_num ) * 0.1 ) ) );
-	condition = condition + ( (total_damage_dealt / 10000 ) * ( ( earnestness - ( EARNESTNESS_SN_ARAM * total_game_num ) ) * 0.2 ) );
-	condition = condition + ( (total_damage_taken / 10000 ) * ( ( earnestness - ( EARNESTNESS_SN_ARAM * total_game_num ) ) * 0.2 ) );
+
+	condition = condition + ( win_rate === 0 ? 0.00001 : win_rate );
+	condition = condition + ( kda - 3.0 ) * ( earnestness );
+	condition = condition + ( total_turret_kill * ( earnestness ) * 0.001);
+	condition = condition + ( (total_damage_dealt / 10000 ) * ( earnestness ) * 0.01);
+	condition = condition + ( (total_damage_taken / 10000 ) * ( earnestness ) * 0.01);
+
 	// 疲労
 	var fatigue = 0;
+	fatigue = fatigue + ( ( play_over_time / 200 ) * earnestness );
 	fatigue = fatigue + ( earnestness - ( EARNESTNESS_SN_ARAM * total_game_num ) );
-	fatigue = fatigue + ( play_time * earnestness );
-	
+	fatigue = fatigue / ( condition / 10 );
 	// 空腹
 	var hungry = 0;
-	hungry = hungry + ( play_time * fatigue );
+	hungry = hungry + play_over_time/150;
+	hungry = hungry + ( fatigue / 10 );
+	
+var game_list = new Array();
+
+for( var i = 0 ; i < data.length ; ++i )
+{
+	var mess = "";
+	switch( data[i].gameMode )
+	{
+		case "CLASSIC": // サモリフ
+			if( data[i].gamesubType === "NORMAL" )
+			{
+				mess = "ノーマル";
+			}
+			else if( data[i].gamesubType === "RANKED_SOLO_5x5" )
+			{
+				mess = "ランク";
+			}
+			else if( data[i].gameType == "CUSTOM_GAME" )
+			{
+				mess = "カスタム";
+			}
+			break;
+		case "ARAM": // アラーム
+			mess = "ARAM";
+			break;
+		case "URF" : // URF
+			mess =" URF";
+			break;
+	}
+	game_list.push(mess);
+}
+console.log("GameList :" + game_list);
+console.log("Win :" + total_win);
+console.log("Lose :" + (10 - total_win));
+console.log("play_time : " + play_over_time);
+console.log("本気度 :" + earnestness);
+console.log("調子 :"+condition);
+console.log("疲れ :"+fatigue);
+console.log("空腹 :"+hungry);
+	
+	// 時間
+	var date = new Date();
+	var hours = date.getHours();
+	
+	if( 6 <= hours && hours <= 9 )
+		hours *= 1.1;
+	else if( 12 <= hours && hours <= 13 )
+		hours *= 1.2;
+	else if( 18 <= hours && hours <= 20 )
+		hours *= 1.3;
+	
+	if( 6 <= hours && hours <= 17 )
+		fatigue *= 0.9;
+	else if( 22 <= hours && hours <= 24 || 0 <= hours && hours <= 3 )
+		fatigue *= 1.2;
+	else if( 3 <= hours && hours <= 5 )
+		fatigue *= 1.4;
 	
 	var save_diff = -1;
 	
@@ -447,11 +469,16 @@ function GetRecommendUdon(data)
 		diff += Math.abs(diff_fatigue - fatigue);
 		diff += Math.abs(diff_hungry - hungry);
 		
-		if( save_diff < diff )
+		if( save_diff > diff || save_diff === -1 )
 		{
 			save_diff = diff;
 			udon_id = key;
 		}
+		console.log("name : " + JSON_DATA_UDON_LIST[key].name);
+		console.log("diff_condition : " + Math.abs(diff_condition - condition));
+		console.log("diff_fatigue : " + Math.abs(diff_fatigue - fatigue));
+		console.log("diff_hungry : " + Math.abs(diff_hungry - hungry));
+		console.log("diff : " + diff);
 	}
 	
 	return JSON_DATA_UDON_LIST[udon_id];
@@ -465,9 +492,19 @@ function ShowUdon(game_data)
 	var newTag = document.createElement("recommend_udon");
 	
 	var udon = GetRecommendUdon(game_data);
+	var fileName = "";
+	
+	if( udon.fileName.length <= 1 )
+	{
+		fileName = udon.fileName[0];
+	}
+	else
+	{
+		fileName = udon.fileName[ Math.floor(Math.random() * udon.fileName.length) ];
+	}
 	
 	newTag.innerHTML = "<br /><h1>" + "今の貴方におすすめのうどんはこちら</h1>" +
-			"<img src='./data/img/"+ udon.fileName +"' width='256' height='256' title='" + udon.name +"' class='udon_img'/>" + "<br>" +
+			"<img src='./data/img/"+ fileName +"' width='256' height='256' title='" + udon.name +"' class='udon_img'/>" + "<br>" +
 			"<div class='udon_name'>" + udon.name + "</div>" +
 			"<br>" +
 			"<div class='udon_info'>" + udon.info + "</div>" +
@@ -475,29 +512,3 @@ function ShowUdon(game_data)
 	
 	target.appendChild(newTag);
 }
-
-function Test()
-{
-	$.ajax(
-	{
-		url: './php/main.php',
-		type: 'GET',
-		dataType: 'json',
-		scriptCharset: 'utf-8',
-		data: { func:"GetVersion" },
-
-		success: function (json)
-		{
-			console.log("Test: success");
-			console.log(json);
-//			var data = JSON.parse(json);
-		},
-		error: function (XMLHttpRequest, textStatus, errorThrown)
-		{
-			console.log(XMLHttpRequest);
-			console.log(textStatus);
-			console.log(errorThrown);
-		}
-	});
-}
-

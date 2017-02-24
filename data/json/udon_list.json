@@ -1,26 +1,32 @@
 {
 	"0": {
-		"fileName" : "udon_000.jpg",
-		"name" : "ぶっかけ天ぷらうどん222",
+		"fileName" : [
+				"udon_000.jpg"
+			],
+		"name" : "ぶっかけ天ぷらうどん",
 		"info" : "あああああ",
 		"param" : {
-			"condition" : [ 0.0, 10.0 ],
-			"fatigue" : [ 0.0, 20.0 ],
-			"hungry" : [ 0.0, 30.0 ]
+			"condition" : [ 30.0, 60.0 ],
+			"fatigue" : [ 0.0, 40.0 ],
+			"hungry" : [ 50.0, 60.0 ]
 		}
 	},
 	"1": {
-		"fileName" : "udon_001.jpg",
+		"fileName" : [
+				"udon_001.jpg"
+			],
 		"name" : "ぶっかけおろしうどん",
 		"info" : "あああああ",
 		"param" : {
-			"condition" : [ -10.0, 10.0 ],
-			"fatigue" : [ -20.0, 10.0 ],
-			"hungry" : [ -30.0, 10.0 ]
+			"condition" : [ 0.0, 50.0 ],
+			"fatigue" : [ 0.0, 40.0 ],
+			"hungry" : [ 30.0, 50.0 ]
 		}
 	},
 	"2": {
-		"fileName" : "udon_002.jpg",
+		"fileName" : [
+				"udon_002.jpg"
+			],
 		"name" : "しっぽくうどん",
 		"info" : "あああああ",
 		"param" : {
@@ -30,37 +36,46 @@
 		}
 	},
 	"3": {
-		"fileName" : "udon_003.jpg",
+		"fileName" : [
+				"udon_003.jpg"
+			],
 		"name" : "かけうどん",
 		"info" : "あああああ",
 		"param" : {
-			"condition" : [ -20.0, -10.0 ],
-			"fatigue" : [ -30.0, -20.0 ],
-			"hungry" : [ -40.0, -30.0 ]
+			"condition" : [ 30.0, 70.0 ],
+			"fatigue" : [ 0.0, 20.0 ],
+			"hungry" : [ 0.0, 40.0 ]
 		}
 	},
 	"4": {
-		"fileName" : "udon_004.jpg",
+		"fileName" : [
+				"udon_004.jpg",
+				"udon_004_001.jpg"
+			],
 		"name" : "肉うどん",
 		"info" : "あああああ",
 		"param" : {
-			"condition" : [ 0.0, 30.0 ],
-			"fatigue" : [ 0.0, 20.0 ],
-			"hungry" : [ 0.0, 10.0 ]
+			"condition" : [ 40.0, 60.0 ],
+			"fatigue" : [ 3.0, 40.0 ],
+			"hungry" : [ 70.0, 120.0 ]
 		}
 	},
 	"5": {
-		"fileName" : "udon_005.jpg",
+		"fileName" : [
+				"udon_005.jpg"
+			],
 		"name" : "鶏天うどん",
 		"info" : "あああああ",
 		"param" : {
-			"condition" : [ -10.0, 30.0 ],
-			"fatigue" : [ -20.0, 20.0 ],
-			"hungry" : [ -30.0, 10.0 ]
+			"condition" : [ 40.0, 60.0 ],
+			"fatigue" : [ 30.0, 60.0 ],
+			"hungry" : [ 40.0, 60.0 ]
 		}
 	},
 	"6": {
-		"fileName" : "udon_006.jpg",
+		"fileName" : [
+				"udon_006.jpg"
+			],
 		"name" : "カレーうどん",
 		"info" : "あああああ",
 		"param" : {
