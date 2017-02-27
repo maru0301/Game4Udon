@@ -1,8 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////////////
 // Global
 var SUM_ID = "";
-var COUNTRY_ID1 = "ja";
-var COUNTRY_ID2 = "JP";
+
+var COUNTRY_ID = "";
 
 var VER_ITEM = "";
 var VER_RUNE = "";
@@ -23,6 +23,7 @@ var GAME_MIN_TIME_SEC = 1200; //  20(min)
 var JSON_DATA_CHAMP_IMG 	= {};
 var JSON_DATA_SN_SPELLS_IMG 	= {};
 var JSON_DATA_UDON_LIST = {};
+var JSON_DATA_GAME_MODE_MESS = {};
 
 ///////////////////////////////////////
 var GAME_MODE_MESS = {
@@ -41,6 +42,11 @@ var GAME_MODE_MESS = {
 			],
 };
 
+var COUNTRY_CODE = {
+	"JP": [ "ja", "JP", "ja_JP" ],
+	"NA": [ "en", "NA", "en_US" ],
+}
+
 ////////////////////////////////////////////////////////////////////////////////////
 // Error Message
 var ERROR_ID_SNUM_NAME_ERROR 		= "サモナーネームが不正です";
@@ -50,10 +56,11 @@ var ERROR_ID_SNUM_GET_ERROR 		= "サモナーネーム情報が取得出来ま�
 var ERROR_ID_CHAMPION_GET_ERROR 	= "チャンピオン情報が取得出来ませんでした";
 var ERROR_ID_SN_SPELLS_GET_ERROR 	= "サモナースペル情報が取得出来ませんでした";
 var ERROR_ID_UDON_LIST_GET_ERROR 	= "うどん情報が取得出来ませんでした";
+var ERROR_ID_GAME_MODE_MESS_GET_ERROR 	= "ゲームモードメッセージ情報が取得出来ませんでした";
 
 ////////////////////////////////////////////////////////////////////////////////////
 //
-function summonerLookUp()
+function UdonOder(region)
 {
 	$("#udon").children().remove();
 	$("#match").children().remove();
@@ -63,14 +70,17 @@ function summonerLookUp()
 	
 	if(SUMMONER_NAME !== "")
 	{
+		COUNTRY_ID = COUNTRY_CODE[region][1];
+		
 		var SUMMONER_NAME_URL = SUMMONER_NAME.replace(" ", "%20");
 		SUMMONER_NAME_URL = SUMMONER_NAME_URL.replace("　", "%20");
 		var request = [
-			{ error_id: ERROR_ID_VERSION_GET_ERROR,		url: './php/main.php', data: { func:"GetVersion" },  }, // Version
-			{ error_id: ERROR_ID_SNUM_GET_ERROR,		url: './php/main.php', data: { func:"GetSummonerByName", summonerName:SUMMONER_NAME_URL, country_id1:COUNTRY_ID2.toLowerCase(), country_id2:COUNTRY_ID2.toUpperCase() },  }, // サモナーID
-			{ error_id: ERROR_ID_CHAMPION_GET_ERROR,	url: './php/main.php', data: { func:"GetChampionImage" },  }, // champion Img
-			{ error_id: ERROR_ID_SN_SPELLS_GET_ERROR,	url: './php/main.php', data: { func:"GetSummonerSpells" },  }, // summoner spell Img
+			{ error_id: ERROR_ID_VERSION_GET_ERROR,		url: './php/main.php', data: { func:"GetVersion", country_id:COUNTRY_ID.toLowerCase() },  }, // Version
+			{ error_id: ERROR_ID_SNUM_GET_ERROR,		url: './php/main.php', data: { func:"GetSummonerByName", summonerName:SUMMONER_NAME_URL, country_id1:COUNTRY_ID.toLowerCase(), country_id2:COUNTRY_ID.toUpperCase() },  }, // サモナーID
+			{ error_id: ERROR_ID_CHAMPION_GET_ERROR,	url: './php/main.php', data: { func:"GetChampionImage", country_id:COUNTRY_ID.toLowerCase() },  }, // champion Img
+			{ error_id: ERROR_ID_SN_SPELLS_GET_ERROR,	url: './php/main.php', data: { func:"GetSummonerSpells", country_id:COUNTRY_ID.toLowerCase() },  }, // summoner spell Img
 			{ error_id: ERROR_ID_UDON_LIST_GET_ERROR,	url: './data/json/udon_list.json', data: {},  },
+			{ error_id: ERROR_ID_GAME_MODE_MESS_GET_ERROR,	url: './data/json/game_mode_mess.json', data: {},  },
 		];
 		
 		var jqXHRList = [];
@@ -107,6 +117,7 @@ function summonerLookUp()
 			var champImgJson = json[2];
 			var spellsImgJson = json[3];
 			var udonListJson = json[4];
+			var gameModeMessJson = json[5];
 			
 			// Version
 			VER_CHAMPION = verJson.n.champion;
@@ -127,6 +138,7 @@ function summonerLookUp()
 			JSON_DATA_CHAMP_IMG = champImgJson;
 			JSON_DATA_SN_SPELLS_IMG = spellsImgJson;
 			JSON_DATA_UDON_LIST = udonListJson;
+			JSON_DATA_GAME_MODE_MESS = gameModeMessJson;
 			
 			///////////////////////////////////////////////////////////
 			// 表示
@@ -170,7 +182,7 @@ function GetRecentMatchHistory()
 		url: './php/main.php',
 		type: 'GET',
 		dataType: 'json',
-		data: { func:"GetRecentMatchHistory", summonerID:SUM_ID, country_id1:COUNTRY_ID2.toLowerCase(), country_id2:COUNTRY_ID2.toUpperCase() },
+		data: { func:"GetRecentMatchHistory", summonerID:SUM_ID, country_id1:COUNTRY_ID.toLowerCase(), country_id2:COUNTRY_ID.toUpperCase() },
 		
 		success: function (json)
 		{
@@ -203,11 +215,21 @@ function GetRecentMatchHistory()
 				gameSubType = json.games[i].subType;
 				
 				// ゲームモード
+				/*
 				for( var j = 0 ; j < GAME_MODE_MESS[game_data[i].gameMode].length ; ++j )
 				{
 					if( gameType === GAME_MODE_MESS[gameMode][j].type && gameSubType === GAME_MODE_MESS[gameMode][j].sub_type )
 					{
 						gameModeMess = GAME_MODE_MESS[gameMode][j].mess;
+						break;
+					}
+				}
+				*/
+				for( var j = 0 ; j < JSON_DATA_GAME_MODE_MESS[game_data[i].gameMode].length ; ++j )
+				{
+					if( gameType === JSON_DATA_GAME_MODE_MESS[gameMode][j].type && gameSubType === JSON_DATA_GAME_MODE_MESS[gameMode][j].sub_type )
+					{
+						gameModeMess = JSON_DATA_GAME_MODE_MESS[gameMode][j].mess[COUNTRY_ID];
 						break;
 					}
 				}

@@ -218,3 +218,7 @@ input {
 	font-family:"Hiragino Kaku Gothic Pro",  Meiryo, sans-serif;
 	font-size:16px;
 }
+
+region {
+	font-size:12px;
+}
