@@ -470,7 +470,7 @@ function GetRecommendUdon(data)
 	else if( 12 <= hours && hours <= 13 )
 		hungry *= 1.2;
 	else if( 18 <= hours && hours <= 20 )
-		hungry *= 1.5;
+		hungry *= 1.3;
 	
 	if( 6 <= hours && hours <= 17 )
 		fatigue *= 0.7;
