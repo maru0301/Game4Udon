@@ -1,0 +1,72 @@
+{
+	"ARAM" : [
+			{
+				"type" : "MATCHED_GAME",
+				"sub_type" : "ARAM_UNRANKED_5x5",
+				"mess" : {
+					"JP" : "アラーム",
+					"NA" : "ARAM"
+				}
+			},
+			{
+				"type" : "CUSTOM_GAME",
+				"sub_type" : "NONE",
+				"mess" : {
+					"JP" : "アラーム(カスタム)",
+					"NA" : "ARAM(Custom)"
+				}
+			}
+	],
+	"CLASSIC" : [
+			{
+				"type" : "MATCHED_GAME",
+				"sub_type" : "RANKED_SOLO_5x5",
+				"mess" : {
+					"JP" : "ランクゲーム",
+					"NA" : "Ranked Solo"
+				}
+			},
+			{
+				"type" : "MATCHED_GAME",
+				"sub_type" : "NORMAL",
+				"mess" : {
+					"JP" : "サモナーズリフト",
+					"NA" : "Normal"
+				}
+			},
+			{
+				"type" : "CUSTOM_GAME",
+				"sub_type" : "NONE",
+				"mess" : {
+					"JP" : "サモナーズリフト(カスタム)",
+					"NA" : "Normal"
+				}
+			},
+			{
+				"type" : "MATCHED_GAME",
+				"sub_type" : "BOT",
+				"mess" : {
+					"JP" : "AI戦",
+					"NA" : "Bot Normal"
+				}
+			}
+	],
+	"URF" : [
+			{
+				"type" : "MATCHED_GAME",
+				"sub_type" : "URF",
+				"mess" : {
+					"JP" : "URF",
+					"NA" : "URF"
+				}
+			},
+			{
+				"type" : "CUSTOM_GAME",
+				"sub_type" : "URF",
+				"mess" : {
+					"JP" : "URF(カスタム)",
+					"NA" : "URF(Custom)"
+				}
+			}
+	]
+}

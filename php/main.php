@@ -14,14 +14,15 @@ class RiotApi
 		$master_url = $url . $this->api_key;
 		$json = file_get_contents($master_url);
 		$json = mb_convert_encoding($json, 'UTF8', 'ASCII,JIS,UTF-8,EUC-JP,SJIS-WIN');
-//		$json = json_encode($json);
 		
 		return $json;
 	}
 	
 	public function GetVersion()
 	{
-		$json = $this->GetJson('https://global.api.pvp.net/api/lol/static-data/jp/v1.2/realm?api_key=');
+		$contry_id = $_GET['country_id'];
+		
+		$json = $this->GetJson('https://global.api.pvp.net/api/lol/static-data/' . $contry_id . '/v1.2/realm?api_key=');
 		
 		return $json;
 	}
@@ -39,14 +40,18 @@ class RiotApi
 	
 	public function GetChampionImage()
 	{
-		$json = $this->GetJson('https://global.api.pvp.net/api/lol/static-data/jp/v1.2/champion?champData=image&api_key=');
+		$contry_id = $_GET['country_id'];
+		
+		$json = $this->GetJson('https://global.api.pvp.net/api/lol/static-data/'. $contry_id . '/v1.2/champion?champData=image&api_key=');
 		
 		return $json;
 	}
 	
 	public function GetSummonerSpells()
 	{
-		$json = $this->GetJson('https://global.api.pvp.net/api/lol/static-data/jp/v1.2/summoner-spell?spellData=image&api_key=');
+		$contry_id = $_GET['country_id'];
+		
+		$json = $this->GetJson('https://global.api.pvp.net/api/lol/static-data/' . $contry_id . '/v1.2/summoner-spell?spellData=image&api_key=');
 		
 		return $json;
 	}
