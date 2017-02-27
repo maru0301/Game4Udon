@@ -444,18 +444,18 @@ function GetRecommendUdon(data)
 	var hours = date.getHours();
 	
 	if( 6 <= hours && hours <= 9 )
-		hours *= 1.1;
+		hungry *= 1.3;
 	else if( 12 <= hours && hours <= 13 )
-		hours *= 1.2;
+		hungry *= 1.5;
 	else if( 18 <= hours && hours <= 20 )
-		hours *= 1.3;
+		hungry *= 1.8;
 	
 	if( 6 <= hours && hours <= 17 )
-		fatigue *= 0.9;
+		fatigue *= 0.7;
 	else if( 22 <= hours && hours <= 24 || 0 <= hours && hours <= 3 )
-		fatigue *= 1.2;
-	else if( 3 <= hours && hours <= 5 )
 		fatigue *= 1.4;
+	else if( 3 <= hours && hours <= 5 )
+		fatigue *= 1.8;
 	
 	var save_diff = -1;
 	
