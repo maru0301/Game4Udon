@@ -89,24 +89,6 @@
 			"hungry" : [ 50.0, 70.0 ]
 		}
 	},
-	"0": {
-		"fileName" : [
-				"udon_000.jpg"
-			],
-		"name" : {
-				"JP" : "ぶっかけ天ぷらうどん",
-				"NA" : "Bukkake Tempura Udon"
-		},
-		"info" : {
-				"JP" : "そこそこ調子が良いけど少しお腹が空いている<br>そんな時は天ぷらを乗せた\"ぶっかけ天ぷらうどん\"",
-				"NA" : "I am feeling quite tired but a little hungry.<br>At such time I put tempura on \"Bukkake Tenpura Udon\"."
-		},
-		"param" : {
-			"condition" : [ 60.0, 70.0 ],
-			"fatigue" : [ 0.0, 0.0 ],
-			"hungry" : [ 30.0, 60.0 ]
-		}
-	},
 	"3": {
 		"fileName" : [
 				"udon_003.jpg"
@@ -122,7 +104,25 @@
 		"param" : {
 			"condition" : [ 60.0, 70.0 ],
 			"fatigue" : [ 0.0, 0.0 ],
-			"hungry" : [ 0.0, 0.0 ]
+			"hungry" : [ 0.0, 30.0 ]
+		}
+	},
+	"0": {
+		"fileName" : [
+				"udon_000.jpg"
+			],
+		"name" : {
+				"JP" : "ぶっかけ天ぷらうどん",
+				"NA" : "Bukkake Tempura Udon"
+		},
+		"info" : {
+				"JP" : "そこそこ調子が良いけど少しお腹が空いている<br>そんな時は天ぷらを乗せた\"ぶっかけ天ぷらうどん\"",
+				"NA" : "I am feeling quite tired but a little hungry.<br>At such time I put tempura on \"Bukkake Tenpura Udon\"."
+		},
+		"param" : {
+			"condition" : [ 60.0, 70.0 ],
+			"fatigue" : [ 0.0, 0.0 ],
+			"hungry" : [ 30.0, 50.0 ]
 		}
 	},
 	"4": {
@@ -141,7 +141,7 @@
 		"param" : {
 			"condition" : [ 60.0, 70.0 ],
 			"fatigue" : [ 0.0, 0.0 ],
-			"hungry" : [ 80.0, 100.0 ]
+			"hungry" : [ 50.0, 100.0 ]
 		}
 	},
 	"5": {
