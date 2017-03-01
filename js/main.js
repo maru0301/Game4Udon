@@ -26,22 +26,6 @@ var JSON_DATA_UDON_LIST = {};
 var JSON_DATA_GAME_MODE_MESS = {};
 
 ///////////////////////////////////////
-var GAME_MODE_MESS = {
-	"ARAM" :	[
-				{ "type" : "MATCHED_GAME",	"sub_type" : "ARAM_UNRANKED_5x5",	"mess" : "アラーム" },
-				{ "type" : "CUSTOM_GAME", 	"sub_type" : "NONE",			"mess" : "アラーム(カスタム)" },
-			],
-	"CLASSIC" :	[
-				{ "type" : "MATCHED_GAME", 	"sub_type" : "RANKED_SOLO_5x5", 	"mess" : "ランクゲーム" },
-				{ "type" : "MATCHED_GAME", 	"sub_type" : "NORMAL", 			"mess" : "サモナーズリフト" },
-				{ "type" : "CUSTOM_GAME", 	"sub_type" : "NONE", 			"mess" : "サモナーズリフト(カスタム)" },
-			],
-	"URF"	:	[
-				{ "type" : "MATCHED_GAME", 	"sub_type" : "URF", 			"mess" : "URF" },
-				{ "type" : "CUSTOM_GAME", 	"sub_type" : "URF", 			"mess" : "URF(カスタム)" },
-			],
-};
-
 var COUNTRY_CODE = {
 	"JP": [ "ja", "JP", "ja_JP" ],
 	"NA": [ "en", "NA", "en_US" ],
@@ -215,16 +199,6 @@ function GetRecentMatchHistory()
 				gameSubType = json.games[i].subType;
 				
 				// ゲームモード
-				/*
-				for( var j = 0 ; j < GAME_MODE_MESS[game_data[i].gameMode].length ; ++j )
-				{
-					if( gameType === GAME_MODE_MESS[gameMode][j].type && gameSubType === GAME_MODE_MESS[gameMode][j].sub_type )
-					{
-						gameModeMess = GAME_MODE_MESS[gameMode][j].mess;
-						break;
-					}
-				}
-				*/
 				for( var j = 0 ; j < JSON_DATA_GAME_MODE_MESS[game_data[i].gameMode].length ; ++j )
 				{
 					if( gameType === JSON_DATA_GAME_MODE_MESS[gameMode][j].type && gameSubType === JSON_DATA_GAME_MODE_MESS[gameMode][j].sub_type )
@@ -527,7 +501,7 @@ function ShowUdon(game_data)
 		fileName = udon.fileName[ Math.floor(Math.random() * udon.fileName.length) ];
 	}
 	
-	newTag.innerHTML = "<br /><h1>" + "今の貴方におすすめのうどんはこちら</h1>" +aaa
+	newTag.innerHTML = "<br /><h1>" + "今の貴方におすすめのうどんはこちら</h1>" +
 			"<img src='./data/img/"+ fileName +"' width='512' height='512' title='" + udon.name +"' class='udon_img'/>" + "<br>" +
 			"<div class='udon_name'>" + udon.name + "</div>" +
 			"<br>" +
