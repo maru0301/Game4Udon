@@ -16,8 +16,11 @@ var CDN_URL = "";
 var EARNESTNESS_SN_NORMAL = 1.0;
 var EARNESTNESS_SN_RANKE_SOLO = 1.00002;
 var EARNESTNESS_SN_ARAM = 0.9;
+var EARNESTNESS_SN_URF = 0.8;
 
-var GAME_MIN_TIME_SEC = 1200; //  20(min)
+var GAME_SUMMONERS_RIFT_MIN_TIME_SEC = 20 * 60; //  20(min)
+var GAME_ARAM_MIN_TIME_SEC = 15 * 60; //  15(min)
+var GAME_URF_MIN_TIME_SEC = 18 * 60; //  19(min)
 
 ///////////////////////////////////////
 var JSON_DATA_CHAMP_IMG 	= {};
@@ -397,10 +400,15 @@ function GetRecommendUdon(data)
 				{
 					earnestness += EARNESTNESS_SN_RANKE_SOLO;
 				}
+				play_over_time += ( data[i].timePlayed - GAME_SUMMONERS_RIFT_MIN_TIME_SEC );
 				break;
 			case "ARAM": // アラーム
-			case "URF" : // URF
 				earnestness += EARNESTNESS_SN_ARAM;
+				play_over_time += ( data[i].timePlayed - GAME_ARAM_MIN_TIME_SEC );
+				break;
+			case "URF" : // URF
+				earnestness += EARNESTNESS_SN_URF;
+				play_over_time += ( data[i].timePlayed - GAME_URF_MIN_TIME_SEC );
 				break;
 		}
 	}
@@ -412,7 +420,7 @@ function GetRecommendUdon(data)
 	// Win Rate
 	win_rate = ( total_win / total_game_num ) * 100;
 	// Play time
-	play_over_time = total_play_time - ( total_game_num * GAME_MIN_TIME_SEC );
+	//play_over_time = total_play_time - ( total_game_num * GAME_MIN_TIME_SEC );
 	
 	// 調子
 	var condition = 0;
@@ -433,7 +441,7 @@ function GetRecommendUdon(data)
 	hungry = hungry + play_over_time/150;
 	hungry = hungry + ( fatigue / 10 );
 	
-	/*
+	
 	var game_list = new Array();
 
 	for( var i = 0 ; i < data.length ; ++i )
@@ -464,6 +472,7 @@ function GetRecommendUdon(data)
 		}
 		game_list.push(mess);
 	}
+/*
 	console.log("GameList :" + game_list);
 	console.log("Win :" + total_win);
 	console.log("Lose :" + (10 - total_win));
@@ -472,7 +481,32 @@ function GetRecommendUdon(data)
 	console.log("調子 :"+condition);
 	console.log("疲れ :"+fatigue);
 	console.log("空腹 :"+hungry);
-	*/
+*/
+/*
+var save_diff_old = -1;
+var hungry_old = hungry;
+var fatigue_old = fatigue;
+var condition_old = condition;
+var udon_id_old = -1;
+
+for( var key in JSON_DATA_UDON_LIST )
+{
+	var diff = 0;
+	var diff_condition = ( JSON_DATA_UDON_LIST[key].param.condition[1] + JSON_DATA_UDON_LIST[key].param.condition[0] ) / 2;
+	var diff_fatigue = ( JSON_DATA_UDON_LIST[key].param.fatigue[1] + JSON_DATA_UDON_LIST[key].param.fatigue[0] ) / 2;
+	var diff_hungry = ( JSON_DATA_UDON_LIST[key].param.hungry[1] + JSON_DATA_UDON_LIST[key].param.hungry[0] ) / 2;
+	diff = Math.abs(diff_condition - condition_old);
+	diff += Math.abs(diff_fatigue - fatigue_old);
+	diff += Math.abs(diff_hungry - hungry_old);
+	
+	if( save_diff_old > diff || save_diff_old === -1 )
+	{
+		save_diff_old = diff;
+		udon_id_old = key;
+	}
+}
+console.log("udon_old : " + JSON_DATA_UDON_LIST[udon_id_old].name[COUNTRY_ID]);
+*/
 	// 時間
 	var date = new Date();
 	var hours = date.getHours();
@@ -482,14 +516,14 @@ function GetRecommendUdon(data)
 	else if( 12 <= hours && hours <= 13 )
 		hungry *= 1.2;
 	else if( 18 <= hours && hours <= 20 )
-		hungry *= 1.3;
+		hungry *= 1.7;
 	
 	if( 6 <= hours && hours <= 17 )
 		fatigue *= 0.7;
 	else if( 22 <= hours && hours <= 24 || 0 <= hours && hours <= 3 )
 		fatigue *= 1.2;
 	else if( 3 <= hours && hours <= 5 )
-		fatigue *= 1.3;
+		fatigue *= 1.7;
 	
 	var save_diff = -1;
 	
@@ -499,22 +533,23 @@ function GetRecommendUdon(data)
 		var diff_condition = ( JSON_DATA_UDON_LIST[key].param.condition[1] + JSON_DATA_UDON_LIST[key].param.condition[0] ) / 2;
 		var diff_fatigue = ( JSON_DATA_UDON_LIST[key].param.fatigue[1] + JSON_DATA_UDON_LIST[key].param.fatigue[0] ) / 2;
 		var diff_hungry = ( JSON_DATA_UDON_LIST[key].param.hungry[1] + JSON_DATA_UDON_LIST[key].param.hungry[0] ) / 2;
-		diff = Math.abs(diff_condition - condition);
-		diff += Math.abs(diff_fatigue - fatigue);
-		diff += Math.abs(diff_hungry - hungry);
+		
+		diff = diff_condition != 0 ? Math.abs(diff_condition - condition) : 0;
+		diff += diff_fatigue != 0 ? Math.abs(diff_fatigue - fatigue) : 0;
+		diff += diff_hungry != 0 ? Math.abs(diff_hungry - hungry) : 0;
 		
 		if( save_diff > diff || save_diff === -1 )
 		{
 			save_diff = diff;
 			udon_id = key;
 		}
-		/*
-		console.log("name : " + JSON_DATA_UDON_LIST[key].name);
-		console.log("diff_condition : " + Math.abs(diff_condition - condition));
-		console.log("diff_fatigue : " + Math.abs(diff_fatigue - fatigue));
-		console.log("diff_hungry : " + Math.abs(diff_hungry - hungry));
+/*
+		console.log("name : " + JSON_DATA_UDON_LIST[key].name[COUNTRY_ID]);
+		console.log("diff_condition : " + (diff_condition != 0 ? Math.abs(diff_condition - condition) : 0));
+		console.log("diff_fatigue : " + (diff_fatigue != 0 ? Math.abs(diff_fatigue - fatigue) : 0));
+		console.log("diff_hungry : " + (diff_hungry != 0 ? Math.abs(diff_hungry - hungry) : 0));
 		console.log("diff : " + diff);
-		*/
+*/
 	}
 	
 	return JSON_DATA_UDON_LIST[udon_id];
