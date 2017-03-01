@@ -27,20 +27,56 @@ var JSON_DATA_GAME_MODE_MESS = {};
 
 ///////////////////////////////////////
 var COUNTRY_CODE = {
-	"JP": [ "ja", "JP", "ja_JP" ],
-	"NA": [ "en", "NA", "en_US" ],
+	"JP" : [ "ja", "JP", "ja_JP" ],
+	"NA" : [ "en", "NA", "en_US" ],
 }
+
+var UDON_HEADER_MESS = {
+	"JP" : "今の貴方におすすめのうどんはこちら",
+	"NA" : "Udon is recommended for you now"
+};
 
 ////////////////////////////////////////////////////////////////////////////////////
 // Error Message
-var ERROR_ID_SNUM_NAME_ERROR 		= "サモナーネームが不正です";
-var ERROR_ID_MASTERY_LISTDATA_GET_ERROR = "マスタリーリストが取得出来ませんでした";
-var ERROR_ID_VERSION_GET_ERROR 		= "バージョン情報が取得出来ませんでした";
-var ERROR_ID_SNUM_GET_ERROR 		= "サモナーネーム情報が取得出来ませんでした";
-var ERROR_ID_CHAMPION_GET_ERROR 	= "チャンピオン情報が取得出来ませんでした";
-var ERROR_ID_SN_SPELLS_GET_ERROR 	= "サモナースペル情報が取得出来ませんでした";
-var ERROR_ID_UDON_LIST_GET_ERROR 	= "うどん情報が取得出来ませんでした";
-var ERROR_ID_GAME_MODE_MESS_GET_ERROR 	= "ゲームモードメッセージ情報が取得出来ませんでした";
+var ERROR_ID_SNUM_NAME_ERROR = {
+					"JP" : "サモナーネームが不正です",
+					"NA" : "Summoner Name not found."
+};
+
+var ERROR_ID_MASTERY_LISTDATA_GET_ERROR = {
+					"JP" : "マスタリーリストが取得出来ませんでした",
+					"NA" : "Failed to get Mastery list."
+};
+
+var ERROR_ID_VERSION_GET_ERROR = {
+					"JP" : "バージョン情報が取得出来ませんでした",
+					"NA" : "Failed to get Version information."
+};
+
+var ERROR_ID_SNUM_GET_ERROR = {
+					"JP" : "サモナーネーム情報が取得出来ませんでした",
+					"NA" : "Failed to get Summoner name information."
+};
+
+var ERROR_ID_CHAMPION_GET_ERROR = {
+					"JP" : "チャンピオン情報が取得出来ませんでした",
+					"NA" : "Failed to get Champion information."
+};
+
+var ERROR_ID_SN_SPELLS_GET_ERROR = {
+					"JP" : "サモナースペル情報が取得出来ませんでした",
+					"NA" : "Failed to get Summoner spells information."
+};
+
+var ERROR_ID_UDON_LIST_GET_ERROR = {
+					"JP" : "うどん情報が取得出来ませんでした",
+					"NA" : "Failed to get Udon information."
+};
+
+var ERROR_ID_GAME_MODE_MESS_GET_ERROR = {
+					"JP" : "ゲームモードメッセージ情報が取得出来ませんでした",
+					"NA" : "Failed to get Game mode message information."
+};
 
 ////////////////////////////////////////////////////////////////////////////////////
 //
@@ -52,19 +88,21 @@ function UdonOder(region)
 	var SUMMONER_NAME = "";
 	SUMMONER_NAME = $("#summonerName").val();
 	
+	COUNTRY_ID = COUNTRY_CODE[region][1];
+	
 	if(SUMMONER_NAME !== "")
 	{
-		COUNTRY_ID = COUNTRY_CODE[region][1];
 		
 		var SUMMONER_NAME_URL = SUMMONER_NAME.replace(" ", "%20");
 		SUMMONER_NAME_URL = SUMMONER_NAME_URL.replace("　", "%20");
+		
 		var request = [
-			{ error_id: ERROR_ID_VERSION_GET_ERROR,		url: './php/main.php', data: { func:"GetVersion", country_id:COUNTRY_ID.toLowerCase() },  }, // Version
-			{ error_id: ERROR_ID_SNUM_GET_ERROR,		url: './php/main.php', data: { func:"GetSummonerByName", summonerName:SUMMONER_NAME_URL, country_id1:COUNTRY_ID.toLowerCase(), country_id2:COUNTRY_ID.toUpperCase() },  }, // サモナーID
-			{ error_id: ERROR_ID_CHAMPION_GET_ERROR,	url: './php/main.php', data: { func:"GetChampionImage", country_id:COUNTRY_ID.toLowerCase() },  }, // champion Img
-			{ error_id: ERROR_ID_SN_SPELLS_GET_ERROR,	url: './php/main.php', data: { func:"GetSummonerSpells", country_id:COUNTRY_ID.toLowerCase() },  }, // summoner spell Img
-			{ error_id: ERROR_ID_UDON_LIST_GET_ERROR,	url: './data/json/udon_list.json', data: {},  },
-			{ error_id: ERROR_ID_GAME_MODE_MESS_GET_ERROR,	url: './data/json/game_mode_mess.json', data: {},  },
+			{ error_id: ERROR_ID_VERSION_GET_ERROR[COUNTRY_ID],		url: './php/main.php', data: { func:"GetVersion", country_id:COUNTRY_ID.toLowerCase() },  }, // Version
+			{ error_id: ERROR_ID_SNUM_GET_ERROR[COUNTRY_ID],		url: './php/main.php', data: { func:"GetSummonerByName", summonerName:SUMMONER_NAME_URL, country_id1:COUNTRY_ID.toLowerCase(), country_id2:COUNTRY_ID.toUpperCase() },  }, // サモナーID
+			{ error_id: ERROR_ID_CHAMPION_GET_ERROR[COUNTRY_ID],		url: './php/main.php', data: { func:"GetChampionImage", country_id:COUNTRY_ID.toLowerCase() },  }, // champion Img
+			{ error_id: ERROR_ID_SN_SPELLS_GET_ERROR[COUNTRY_ID],		url: './php/main.php', data: { func:"GetSummonerSpells", country_id:COUNTRY_ID.toLowerCase() },  }, // summoner spell Img
+			{ error_id: ERROR_ID_UDON_LIST_GET_ERROR[COUNTRY_ID],		url: './data/json/udon_list.json', data: {},  },
+			{ error_id: ERROR_ID_GAME_MODE_MESS_GET_ERROR[COUNTRY_ID],	url: './data/json/game_mode_mess.json', data: {},  },
 		];
 		
 		var jqXHRList = [];
@@ -144,7 +182,7 @@ function UdonOder(region)
 	}
 	else
 	{
-		errorDlg(ERROR_ID_SNUM_NAME_ERROR);
+		errorDlg(ERROR_ID_SNUM_NAME_ERROR[COUNTRY_ID]);
 	}
 }
 
@@ -490,6 +528,9 @@ function ShowUdon(game_data)
 	var newTag = document.createElement("recommend_udon");
 	
 	var udon = GetRecommendUdon(game_data);
+	var udon_name = udon.name[COUNTRY_ID];
+	var udon_info = udon.info[COUNTRY_ID];
+	var header_mess = UDON_HEADER_MESS[COUNTRY_ID];
 	var fileName = "";
 	
 	if( udon.fileName.length <= 1 )
@@ -501,11 +542,11 @@ function ShowUdon(game_data)
 		fileName = udon.fileName[ Math.floor(Math.random() * udon.fileName.length) ];
 	}
 	
-	newTag.innerHTML = "<br /><h1>" + "今の貴方におすすめのうどんはこちら</h1>" +
-			"<img src='./data/img/"+ fileName +"' width='512' height='512' title='" + udon.name +"' class='udon_img'/>" + "<br>" +
-			"<div class='udon_name'>" + udon.name + "</div>" +
+	newTag.innerHTML = "<br /><h1>" + header_mess + "</h1>" +
+			"<img src='./data/img/"+ fileName +"' width='512' height='512' title='" + udon_name +"' class='udon_img'/>" + "<br>" +
+			"<div class='udon_name'>" + udon_name + "</div>" +
 			"<br>" +
-			"<div class='udon_info'>" + udon.info + "</div>" +
+			"<div class='udon_info'>" + udon_info + "</div>" +
 			"<br>";
 	
 	target.appendChild(newTag);
