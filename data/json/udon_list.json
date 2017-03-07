@@ -81,7 +81,7 @@
 			},
 			"info" : {
 					"JP" : "調子は普通、少しあっさりした物が食べたい<br>そんな時は\"きつねうどん\"",
-					"NA" : "Tone is normal, I want to eat something a little crisp<br>Such a time was crisp \"Rabbit Kitune Udon\"."
+					"NA" : "Tone is normal, I want to eat something a little crisp<br>Such a time was crisp \"Kitune Udon\"."
 			},
 			"param" : {
 				"condition" : [ 30.0, 50.0 ],
@@ -99,7 +99,7 @@
 			},
 			"info" : {
 					"JP" : "調子は普通、少しガッツリ食べたい<br>そんな時は\"うま鶏塩うどん\"",
-					"NA" : "I usually want to eat a little bit<br>Such a time was crisp \"Rabbit Kitune Udon\"."
+					"NA" : "I usually want to eat a little bit<br>Such a time was crisp \"Uma Chicken salt Udon\"."
 			},
 			"param" : {
 				"condition" : [ 30.0, 50.0 ],
