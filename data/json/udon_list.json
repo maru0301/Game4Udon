@@ -90,7 +90,6 @@
 			}
 		},
 		{
-		{
 			"fileName" : [
 					"udon_011.jpg"
 				],
@@ -108,6 +107,7 @@
 				"hungry" : [ 20.0, 40.0 ]
 			}
 		},
+		{
 			"fileName" : [
 					"udon_007.jpg"
 				],
