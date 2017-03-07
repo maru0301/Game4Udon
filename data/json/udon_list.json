@@ -1,183 +1,219 @@
-{
-	"2": {
-		"fileName" : [
-				"udon_002.jpg"
-			],
-		"name" : {
-				"JP" : "しっぽくうどん",
-				"NA" : "Sippoku Udon"
+[
+		{
+			"fileName" : [
+					"udon_002.jpg"
+				],
+			"name" : {
+					"JP" : "しっぽくうどん",
+					"NA" : "Sippoku Udon"
+			},
+			"info" : {
+					"JP" : "とても疲れてお腹が空いた<br>そんな時はほっこりした\"しっぽくうどん\"",
+					"NA" : "I am very tired and hungry<br>Such a time I was smile \"Sippoku Udon\"."
+			},
+			"param" : {
+				"condition" : [ 0.0, 0.0 ],
+				"fatigue" : [ 80.0, 100.0 ],
+				"hungry" : [ 60.0, 80.0 ]
+			}
 		},
-		"info" : {
-				"JP" : "とても疲れてお腹が空いた<br>そんな時はほっこりした\"しっぽくうどん\"",
-				"NA" : "I am very tired and hungry<br>Such a time I was smile \"Sippoku Udon\"."
+		{
+			"fileName" : [
+					"udon_006.jpg"
+				],
+			"name" : {
+					"JP" : "カレーうどん",
+					"NA" : "Curry Udon"
+			},
+			"info" : {
+					"JP" : "悪い調子の流れを変えるため刺激が欲しい<br>そんな時は\"カレーうどん\"",
+					"NA" : "I want stimulation to change the flow of bad tone<br>At such time \"Curry Udon\"."
+			},
+			"param" : {
+				"condition" : [ 0.0, 30.0 ],
+				"fatigue" : [ 0.0, 0.0 ],
+				"hungry" : [ 60.0, 80.0 ]
+			}
 		},
-		"param" : {
-			"condition" : [ 0.0, 0.0 ],
-			"fatigue" : [ 80.0, 100.0 ],
-			"hungry" : [ 60.0, 80.0 ]
+		{
+			"fileName" : [
+					"udon_009.jpg"
+				],
+			"name" : {
+					"JP" : "牛カレーうどん",
+					"NA" : "Beef Curry Udon"
+			},
+			"info" : {
+					"JP" : "調子は悪いけどガッツリ食べたい<br>そんな時は\"牛カレーうどん\"",
+					"NA" : "I am feeling sick but I want to eat<br>At such time \"Beef Curry Udon\"."
+			},
+			"param" : {
+				"condition" : [ 0.0, 30.0 ],
+				"fatigue" : [ 0.0, 0.0 ],
+				"hungry" : [ 80.0, 100.0 ]
+			}
+		},
+		{
+			"fileName" : [
+					"udon_001.jpg"
+				],
+			"name" : {
+					"JP" : "ぶっかけおろしうどん",
+					"NA" : "Bukkake Oroshi Udon"
+			},
+			"info" : {
+					"JP" : "調子はあんまり良く無く気分を切り替えたい<br>そんな時はあっさりした\"ぶっかけおろしうどん\"",
+					"NA" : "I do not feel well and I want to switch my mood<br>Such a time was crisp \"Bukkake Oroshi Udon\"."
+			},
+			"param" : {
+				"condition" : [ 20.0, 40.0 ],
+				"fatigue" : [ 0.0, 0.0 ],
+				"hungry" : [ 0.0, 0.0 ]
+			}
+		},
+		{
+			"fileName" : [
+					"udon_010.jpg"
+				],
+			"name" : { 
+					"JP" : "きつねうどん",
+					"NA" : "Kitune Udon"
+			},
+			"info" : {
+					"JP" : "調子は普通、少しあっさりした物が食べたい<br>そんな時は\"きつねうどん\"",
+					"NA" : "Tone is normal, I want to eat something a little crisp<br>Such a time was crisp \"Rabbit Kitune Udon\"."
+			},
+			"param" : {
+				"condition" : [ 30.0, 50.0 ],
+				"fatigue" : [ 0.0, 0.0 ],
+				"hungry" : [ 20.0, 40.0 ]
+			}
+		},
+		{
+		{
+			"fileName" : [
+					"udon_011.jpg"
+				],
+			"name" : { 
+					"JP" : "うま鶏塩うどん",
+					"NA" : "Uma Chicken salt Udon"
+			},
+			"info" : {
+					"JP" : "調子は普通、少しガッツリ食べたい<br>そんな時は\"うま鶏塩うどん\"",
+					"NA" : "I usually want to eat a little bit<br>Such a time was crisp \"Rabbit Kitune Udon\"."
+			},
+			"param" : {
+				"condition" : [ 30.0, 50.0 ],
+				"fatigue" : [ 0.0, 0.0 ],
+				"hungry" : [ 20.0, 40.0 ]
+			}
+		},
+			"fileName" : [
+					"udon_007.jpg"
+				],
+			"name" : {
+					"JP" : "釜揚げうどん",
+					"NA" : "Kamaage Udon"
+			},
+			"info" : {
+					"JP" : "調子はそこそこ、でも少しお腹が空いた<br>そんな時は\"釜揚げうどん\"",
+					"NA" : "I was feeling quite a bit, but I am a little hungry<br>At such time \"Kamaage Udon\"."
+			},
+			"param" : {
+				"condition" : [ 40.0, 60.0 ],
+				"fatigue" : [ 0.0, 0.0 ],
+				"hungry" : [ 50.0, 70.0 ]
+			}
+		},
+		{
+			"fileName" : [
+					"udon_003.jpg"
+				],
+			"name" : {
+					"JP" : "かけうどん",
+					"NA" : "Kake Udon"
+			},
+			"info" : {
+					"JP" : "調子はそこそこ良いのでその調子を維持したい<br>そんな時はオーソドックスな\"かけうどん\"",
+					"NA" : "I want to maintain that condition because it is so good<br>Such a time is orthodox \"Kake Udon\"."
+			},
+			"param" : {
+				"condition" : [ 60.0, 70.0 ],
+				"fatigue" : [ 0.0, 0.0 ],
+				"hungry" : [ 0.0, 30.0 ]
+			}
+		},
+		{
+			"fileName" : [
+					"udon_000.jpg"
+				],
+			"name" : {
+					"JP" : "ぶっかけ天ぷらうどん",
+					"NA" : "Bukkake Tempura Udon"
+			},
+			"info" : {
+					"JP" : "そこそこ調子が良いけど少しお腹が空いている<br>そんな時は天ぷらを乗せた\"ぶっかけ天ぷらうどん\"",
+					"NA" : "I am feeling quite tired but a little hungry.<br>At such time I put tempura on \"Bukkake Tenpura Udon\"."
+			},
+			"param" : {
+				"condition" : [ 60.0, 70.0 ],
+				"fatigue" : [ 0.0, 0.0 ],
+				"hungry" : [ 30.0, 50.0 ]
+			}
+		},
+		{
+			"fileName" : [
+					"udon_004.jpg",
+					"udon_004_001.jpg"
+				],
+			"name" : {
+					"JP" : "肉うどん",
+					"NA" : "Beef Udon"
+			},
+			"info" : {
+					"JP" : "調子はそこそこお腹が空いてガッツリ食べたい<br>そんな時は\"肉うどん\"",
+					"NA" : "I feel like I'm gonna eat up so tired<br>At such time \"Beef Udon\"."
+			},
+			"param" : {
+				"condition" : [ 60.0, 70.0 ],
+				"fatigue" : [ 0.0, 0.0 ],
+				"hungry" : [ 50.0, 100.0 ]
+			}
+		},
+		{
+			"fileName" : [
+					"udon_005.jpg"
+				],
+			"name" : {
+					"JP" : "鶏天うどん",
+					"NA" : "Chicken Tenpura Udon"
+			},
+			"info" : {
+					"JP" : "調子は絶好調で小腹が空いた<br>そんな時は\"鶏天うどん\"",
+					"NA" : "My condition is on top condition and I am hungry<br>At such time \"Chicken Tenpura Udon\"."
+			},
+			"param" : {
+				"condition" : [ 80.0, 100.0 ],
+				"fatigue" : [ 0.0, 0.0 ],
+				"hungry" : [ 50.0, 70.0 ]
+			}
+		},
+		{
+			"fileName" : [
+					"udon_008.jpg"
+				],
+			"name" : { 
+					"JP" : "うさ狐うどん",
+					"NA" : "Rabbit Kitune Udon"
+			},
+			"info" : {
+					"JP" : "調子は絶好調！どんな事も上手くいきそう<br>そんな特別な時は\"うさ狐うどん\"",
+					"NA" : "Your condition is perfect! Anything seems to go well<br>Such a special occasion \"Rabbit Kitune Udon\"."
+			},
+			"param" : {
+				"condition" : [ 90.0, 100.0 ],
+				"fatigue" : [ 0.0, 0.0 ],
+				"hungry" : [ 0.0, 0.0 ]
+			}
 		}
-	},
-	"6": {
-		"fileName" : [
-				"udon_006.jpg"
-			],
-		"name" : {
-				"JP" : "カレーうどん",
-				"NA" : "Curry Udon"
-		},
-		"info" : {
-				"JP" : "悪い調子の流れを変えるため刺激が欲しい<br>そんな時は\"カレーうどん\"",
-				"NA" : "I want stimulation to change the flow of bad tone<br>At such time \"Curry Udon\"."
-		},
-		"param" : {
-			"condition" : [ 0.0, 30.0 ],
-			"fatigue" : [ 0.0, 0.0 ],
-			"hungry" : [ 60.0, 80.0 ]
-		}
-	},
-	"9": {
-		"fileName" : [
-				"udon_009.jpg"
-			],
-		"name" : {
-				"JP" : "牛カレーうどん",
-				"NA" : "Beef Curry Udon"
-		},
-		"info" : {
-				"JP" : "調子は悪いけどガッツリ食べたい<br>そんな時は\"牛カレーうどん\"",
-				"NA" : "I am feeling sick but I want to eat<br>At such time \"Beef Curry Udon\"."
-		},
-		"param" : {
-			"condition" : [ 0.0, 30.0 ],
-			"fatigue" : [ 0.0, 0.0 ],
-			"hungry" : [ 80.0, 100.0 ]
-		}
-	},
-	"1": {
-		"fileName" : [
-				"udon_001.jpg"
-			],
-		"name" : {
-				"JP" : "ぶっかけおろしうどん",
-				"NA" : "Bukkake Oroshi Udon"
-		},
-		"info" : {
-				"JP" : "調子はあんまり良く無く気分を切り替えたい<br>そんな時はあっさりした\"ぶっかけおろしうどん\"",
-				"NA" : "I do not feel well and I want to switch my mood<br>Such a time was crisp \"Bukkake Oroshi Udon\"."
-		},
-		"param" : {
-			"condition" : [ 20.0, 40.0 ],
-			"fatigue" : [ 0.0, 0.0 ],
-			"hungry" : [ 0.0, 0.0 ]
-		}
-	},
-	"7": {
-		"fileName" : [
-				"udon_007.jpg"
-			],
-		"name" : {
-				"JP" : "釜揚げうどん",
-				"NA" : "Kamaage Udon"
-		},
-		"info" : {
-				"JP" : "調子はそこそこ、でも少しお腹が空いた<br>そんな時は\"釜揚げうどん\"",
-				"NA" : "I was feeling quite a bit, but I am a little hungry<br>At such time \"Kamaage Udon\"."
-		},
-		"param" : {
-			"condition" : [ 40.0, 60.0 ],
-			"fatigue" : [ 0.0, 0.0 ],
-			"hungry" : [ 50.0, 70.0 ]
-		}
-	},
-	"3": {
-		"fileName" : [
-				"udon_003.jpg"
-			],
-		"name" : {
-				"JP" : "かけうどん",
-				"NA" : "Kake Udon"
-		},
-		"info" : {
-				"JP" : "調子はそこそこ良いのでその調子を維持したい<br>そんな時はオーソドックスな\"かけうどん\"",
-				"NA" : "I want to maintain that condition because it is so good<br>Such a time is orthodox \"Kake Udon\"."
-		},
-		"param" : {
-			"condition" : [ 60.0, 70.0 ],
-			"fatigue" : [ 0.0, 0.0 ],
-			"hungry" : [ 0.0, 30.0 ]
-		}
-	},
-	"0": {
-		"fileName" : [
-				"udon_000.jpg"
-			],
-		"name" : {
-				"JP" : "ぶっかけ天ぷらうどん",
-				"NA" : "Bukkake Tempura Udon"
-		},
-		"info" : {
-				"JP" : "そこそこ調子が良いけど少しお腹が空いている<br>そんな時は天ぷらを乗せた\"ぶっかけ天ぷらうどん\"",
-				"NA" : "I am feeling quite tired but a little hungry.<br>At such time I put tempura on \"Bukkake Tenpura Udon\"."
-		},
-		"param" : {
-			"condition" : [ 60.0, 70.0 ],
-			"fatigue" : [ 0.0, 0.0 ],
-			"hungry" : [ 30.0, 50.0 ]
-		}
-	},
-	"4": {
-		"fileName" : [
-				"udon_004.jpg",
-				"udon_004_001.jpg"
-			],
-		"name" : {
-				"JP" : "肉うどん",
-				"NA" : "Beef Udon"
-		},
-		"info" : {
-				"JP" : "調子はそこそこお腹が空いてガッツリ食べたい<br>そんな時は\"肉うどん\"",
-				"NA" : "I feel like I'm gonna eat up so tired<br>At such time \"Beef Udon\"."
-		},
-		"param" : {
-			"condition" : [ 60.0, 70.0 ],
-			"fatigue" : [ 0.0, 0.0 ],
-			"hungry" : [ 50.0, 100.0 ]
-		}
-	},
-	"5": {
-		"fileName" : [
-				"udon_005.jpg"
-			],
-		"name" : {
-				"JP" : "鶏天うどん",
-				"NA" : "Chicken Tenpura Udon"
-		},
-		"info" : {
-				"JP" : "調子は絶好調で小腹が空いた<br>そんな時は\"鶏天うどん\"",
-				"NA" : "My condition is on top condition and I am hungry<br>At such time \"Chicken Tenpura Udon\"."
-		},
-		"param" : {
-			"condition" : [ 80.0, 100.0 ],
-			"fatigue" : [ 0.0, 0.0 ],
-			"hungry" : [ 50.0, 70.0 ]
-		}
-	},
-	"8": {
-		"fileName" : [
-				"udon_008.jpg"
-			],
-		"name" : { 
-				"JP" : "うさ狐うどん",
-				"NA" : "Rabbit Kitune Udon"
-		},
-		"info" : {
-				"JP" : "調子は絶好調！どんな事も上手くいきそう<br>そんな特別な時は\"うさ狐うどん\"",
-				"NA" : "Your condition is perfect! Anything seems to go well<br>Such a special occasion \"Rabbit Kitune Udon\"."
-		},
-		"param" : {
-			"condition" : [ 90.0, 100.0 ],
-			"fatigue" : [ 0.0, 0.0 ],
-			"hungry" : [ 0.0, 0.0 ]
-		}
-	}
-}
+]
