@@ -30,8 +30,8 @@ var JSON_DATA_GAME_MODE_MESS = {};
 
 ///////////////////////////////////////
 var COUNTRY_CODE = {
-	"JP" : [ "ja", "JP", "ja_JP" ],
-	"NA" : [ "en", "NA", "en_US" ],
+	"JP" : [ "ja", "JP", "ja_JP", "jp1" ],
+	"NA" : [ "en", "NA", "en_US", "na1" ],
 }
 
 var UDON_HEADER_MESS = {
@@ -92,6 +92,7 @@ function UdonOder(region)
 	SUMMONER_NAME = $("#summonerName").val();
 	
 	COUNTRY_ID = COUNTRY_CODE[region][1];
+	COUNTRY_ID2 = COUNTRY_CODE[region][3];
 	
 	if(SUMMONER_NAME !== "")
 	{
@@ -100,10 +101,10 @@ function UdonOder(region)
 		SUMMONER_NAME_URL = SUMMONER_NAME_URL.replace("　", "%20");
 		
 		var request = [
-			{ error_id: ERROR_ID_VERSION_GET_ERROR[COUNTRY_ID],		url: './php/main.php', data: { func:"GetVersion", country_id:COUNTRY_ID.toLowerCase() },  }, // Version
-			{ error_id: ERROR_ID_SNUM_GET_ERROR[COUNTRY_ID],		url: './php/main.php', data: { func:"GetSummonerByName", summonerName:SUMMONER_NAME_URL, country_id1:COUNTRY_ID.toLowerCase(), country_id2:COUNTRY_ID.toUpperCase() },  }, // サモナーID
-			{ error_id: ERROR_ID_CHAMPION_GET_ERROR[COUNTRY_ID],		url: './php/main.php', data: { func:"GetChampionImage", country_id:COUNTRY_ID.toLowerCase() },  }, // champion Img
-			{ error_id: ERROR_ID_SN_SPELLS_GET_ERROR[COUNTRY_ID],		url: './php/main.php', data: { func:"GetSummonerSpells", country_id:COUNTRY_ID.toLowerCase() },  }, // summoner spell Img
+			{ error_id: ERROR_ID_VERSION_GET_ERROR[COUNTRY_ID],		url: './php/main.php', data: { func:"GetVersion", country_id:COUNTRY_ID2 },  }, // Version
+			{ error_id: ERROR_ID_SNUM_GET_ERROR[COUNTRY_ID],		url: './php/main.php', data: { func:"GetSummonerByName", summonerName:SUMMONER_NAME_URL, country_id1:COUNTRY_ID2 },  }, // サモナーID
+			{ error_id: ERROR_ID_CHAMPION_GET_ERROR[COUNTRY_ID],		url: './php/main.php', data: { func:"GetChampionImage", country_id:COUNTRY_ID2 },  }, // champion Img
+			{ error_id: ERROR_ID_SN_SPELLS_GET_ERROR[COUNTRY_ID],		url: './php/main.php', data: { func:"GetSummonerSpells", country_id:COUNTRY_ID2 },  }, // summoner spell Img
 			{ error_id: ERROR_ID_UDON_LIST_GET_ERROR[COUNTRY_ID],		url: './data/json/udon_list.json', data: {},  },
 			{ error_id: ERROR_ID_GAME_MODE_MESS_GET_ERROR[COUNTRY_ID],	url: './data/json/game_mode_mess.json', data: {},  },
 		];
@@ -154,10 +155,7 @@ function UdonOder(region)
 			CDN_URL = verJson.cdn;
 			
 			// サモナーID
-			var SUMMONER_NAME_NOSPACES = SUMMONER_NAME.replace(" ", "");
-			SUMMONER_NAME_NOSPACES = SUMMONER_NAME_NOSPACES.toLowerCase().trim();
-			
-			SUM_ID = summonerJson[SUMMONER_NAME_NOSPACES].id; // サモナーID保存
+			SUM_ID = summonerJson.id; // サモナーID保存
 			
 			// Jsonをキャッシュ
 			JSON_DATA_CHAMP_IMG = champImgJson;

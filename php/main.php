@@ -22,7 +22,7 @@ class RiotApi
 	{
 		$contry_id = $_GET['country_id'];
 		
-		$json = $this->GetJson('https://global.api.pvp.net/api/lol/static-data/' . $contry_id . '/v1.2/realm?api_key=');
+		$json = $this->GetJson('https://' . $contry_id . '.api.riotgames.com/lol/static-data/v3/realms?api_key=');
 		
 		return $json;
 	}
@@ -31,9 +31,8 @@ class RiotApi
 	{
 		$sn_name = $_GET['summonerName'];
 		$contry_id1 = $_GET['country_id1'];
-		$contry_id2 = $_GET['country_id2'];
 		
-		$json = $this->GetJson('https://' . $contry_id1 . '.api.pvp.net/api/lol/' . $contry_id2 . '/v1.4/summoner/by-name/' . $sn_name . '?api_key=');
+		$json = $this->GetJson('https://' . $contry_id1 . '.api.riotgames.com/lol/summoner/v3/summoners/by-name/' . $sn_name . '?api_key=');
 		
 		return $json;
 	}
@@ -41,8 +40,8 @@ class RiotApi
 	public function GetChampionImage()
 	{
 		$contry_id = $_GET['country_id'];
-		
-		$json = $this->GetJson('https://global.api.pvp.net/api/lol/static-data/'. $contry_id . '/v1.2/champion?champData=image&api_key=');
+
+		$json = $this->GetJson('https://'. $contry_id . '.api.riotgames.com/lol/static-data/v3/champions?champData=image&api_key=');
 		
 		return $json;
 	}
@@ -51,7 +50,7 @@ class RiotApi
 	{
 		$contry_id = $_GET['country_id'];
 		
-		$json = $this->GetJson('https://global.api.pvp.net/api/lol/static-data/' . $contry_id . '/v1.2/summoner-spell?spellData=image&api_key=');
+		$json = $this->GetJson('https://' . $contry_id . '.api.riotgames.com/lol/static-data/v3/summoner-spells?spellData=image&api_key=');
 		
 		return $json;
 	}
@@ -62,7 +61,7 @@ class RiotApi
 		$contry_id1 = $_GET['country_id1'];
 		$contry_id2 = $_GET['country_id2'];
 		
-		$json = $this->GetJson('https://' . $contry_id1 . '.api.pvp.net/api/lol/' . $contry_id2 . '/v1.3/game/by-summoner/' . $sn_id . '/recent?api_key=');
+		$json = $this->GetJson('https://' . $contry_id1 . '.api.riotgames.com/api/lol/' . $contry_id2 . '/v1.3/game/by-summoner/' . $sn_id . '/recent?api_key=');
 		
 		return $json;
 	}
